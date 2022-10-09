@@ -39,8 +39,8 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public RegionDto getRegionById(Long regionId, Long countryId) {
-        RegionDto region = getRegionById(regionId);
+    public RegionDto getRegionDtoById(Long regionId, Long countryId) {
+        RegionDto region = getRegionDtoById(regionId);
 
         if (!region.getCountryURI().contains("/" + countryId))
             throw new NotFoundException("No Regions with id: " + regionId + " in this country");
@@ -49,11 +49,17 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public RegionDto getRegionById(Long regionId) {
+    public Region getRegionById(Long id) {
+        return regionRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Region with id: " + id + " wasn't found"));
+    }
+
+    @Override
+    public RegionDto getRegionDtoById(Long regionId) {
         Optional<Region> regionOptional = regionRepository.findById(regionId);
 
         if (regionOptional.isEmpty())
-            throw new NotFoundException("Region with id:" + regionId + " wasn't found");
+            throw new NotFoundException("Region with id: " + regionId + " wasn't found");
 
         Region region = regionOptional.get();
 

@@ -11,5 +11,11 @@ public interface LocationService {
 
     LocationDto getLocationById(Long locationId, Long regionId, Long countryId);
 
-    LocationDto saveLocation(Long regionId, Long countryId);
+    LocationDto getLocationById(Long locationId);
+
+    LocationDto saveLocation(LocationDto locationDto, Long regionId, Long countryId);
+
+    LocationDto updateLocation(LocationDto locationDto, Long locationId, Long regionId, Long countryId);
+
+    void deleteLocation(Long locationId, Long regionId, Long countryId);
 }

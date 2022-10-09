@@ -29,9 +29,9 @@ public class RegionController {
     public RegionDto getRegionById(@PathVariable(required = false) String countryId,
                                    @PathVariable String regionId) {
         if (countryId == null)
-            return regionService.getRegionById(Long.valueOf(regionId));
+            return regionService.getRegionDtoById(Long.valueOf(regionId));
 
-        return regionService.getRegionById(Long.valueOf(regionId), Long.valueOf(countryId));
+        return regionService.getRegionDtoById(Long.valueOf(regionId), Long.valueOf(countryId));
     }
 
     @ResponseStatus(HttpStatus.CREATED)

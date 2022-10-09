@@ -1,6 +1,7 @@
 package sin2cos2.extremeSportRestAPI.services;
 
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.RegionDto;
+import sin2cos2.extremeSportRestAPI.entities.Region;
 
 import java.util.Set;
 
@@ -9,7 +10,9 @@ public interface RegionService {
 
     Set<RegionDto> getAllRegions();
 
-    RegionDto getRegionById(Long id, Long countryId);
+    RegionDto getRegionDtoById(Long id, Long countryId);
+
+    Region getRegionById(Long id);
 
     RegionDto saveRegion(Long countryId, RegionDto regionDto);
 
@@ -17,5 +20,5 @@ public interface RegionService {
 
     void deleteRegion(Long regionId, Long countryId);
 
-    RegionDto getRegionById(Long regionId);
+    RegionDto getRegionDtoById(Long regionId);
 }
