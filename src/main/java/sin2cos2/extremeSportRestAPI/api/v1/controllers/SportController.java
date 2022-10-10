@@ -21,7 +21,7 @@ public class SportController {
 
     @GetMapping("/{sportId}")
     public SportDto getSportById(@PathVariable String sportId) {
-        return sportService.getSportById(Long.valueOf(sportId));
+        return sportService.getSportDtoById(Long.valueOf(sportId));
     }
 
     @PostMapping

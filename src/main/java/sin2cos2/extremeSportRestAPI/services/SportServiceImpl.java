@@ -29,13 +29,19 @@ public class SportServiceImpl implements SportService {
     }
 
     @Override
-    public SportDto getSportById(Long sportId) {
+    public SportDto getSportDtoById(Long sportId) {
         Optional<Sport> sport = sportRepository.findById(sportId);
 
         if (sport.isEmpty())
             throw new NotFoundException("Sport with id: " + sportId + " wasn't found");
 
         return sportMapper.sportToSportDto(sport.get());
+    }
+
+    @Override
+    public Sport getSportById(Long sportId) {
+        return sportRepository.findById(sportId)
+                .orElseThrow(NotFoundException::new);
     }
 
     @Override

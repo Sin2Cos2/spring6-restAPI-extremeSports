@@ -16,4 +16,10 @@ public interface TripService {
     TripDto getTripByLocation(Long countryId, Long regionId, Long locationId, Long tripId);
 
     TripDto getTripBySport(Long sportId, Long tripId);
+
+    TripDto saveTrip(Long countryId, Long regionId, Long locationId, Long sportId, TripDto tripDto);
+
+    TripDto updateTrip(Long countryId, Long regionId, Long locationId, Long tripId, TripDto tripDto);
+
+    void deleteTrip(Long countryId, Long regionId, Long locationId, Long tripId);
 }

@@ -32,10 +32,10 @@ public class LocationController {
                                        @PathVariable String locationId) {
 
         if (countryId == null || regionId == null)
-            return locationService.getLocationById(Long.valueOf(locationId));
+            return locationService.getLocationDtoById(Long.valueOf(locationId));
 
         return locationService
-                .getLocationById(Long.valueOf(locationId), Long.valueOf(regionId), Long.valueOf(countryId));
+                .getLocationDtoById(Long.valueOf(locationId), Long.valueOf(regionId), Long.valueOf(countryId));
     }
 
     @ResponseStatus(HttpStatus.CREATED)

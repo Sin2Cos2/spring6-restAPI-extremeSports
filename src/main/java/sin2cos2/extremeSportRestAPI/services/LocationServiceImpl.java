@@ -42,8 +42,8 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public LocationDto getLocationById(Long locationId, Long regionId, Long countryId) {
-        LocationDto locationDto = getLocationById(locationId);
+    public LocationDto getLocationDtoById(Long locationId, Long regionId, Long countryId) {
+        LocationDto locationDto = getLocationDtoById(locationId);
 
         String regionURI = "/regions/" + regionId;
         String countryURI = "/countries/" + countryId;
@@ -58,7 +58,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public LocationDto getLocationById(Long locationId) {
+    public LocationDto getLocationDtoById(Long locationId) {
         Optional<Location> locationOptional = locationRepository.findById(locationId);
 
         if(locationOptional.isEmpty())
@@ -66,6 +66,12 @@ public class LocationServiceImpl implements LocationService {
 
         Location location = locationOptional.get();
         return locationMapper.locationToLocationDto(location);
+    }
+
+    @Override
+    public Location getLocationById(Long locationId) {
+        return locationRepository.findById(locationId)
+                .orElseThrow(NotFoundException::new);
     }
 
     @Override

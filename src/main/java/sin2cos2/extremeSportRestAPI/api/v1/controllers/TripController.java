@@ -1,10 +1,8 @@
 package sin2cos2.extremeSportRestAPI.api.v1.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.TripDto;
 import sin2cos2.extremeSportRestAPI.services.TripService;
 
@@ -59,4 +57,44 @@ public class TripController {
         return tripService.getTripBySport(Long.valueOf(sportId), Long.valueOf(tripId));
     }
 
+    //TODO: Post new relationship
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/countries/{countryId}/regions/{regionId}/locations/{locationId}/trips")
+    public TripDto saveTrip(@PathVariable String countryId,
+                            @PathVariable String regionId,
+                            @PathVariable String locationId,
+                            @RequestParam String sportId,
+                            @RequestBody TripDto tripDto) {
+        return tripService.saveTrip(Long.valueOf(countryId),
+                Long.valueOf(regionId),
+                Long.valueOf(locationId),
+                Long.valueOf(sportId),
+                tripDto);
+    }
+
+    //TODO: Put update by location, by sport
+    @PutMapping("/countries/{countryId}/regions/{regionId}/locations/{locationId}/trips/{tripId}")
+    public TripDto updateTrip(@PathVariable String countryId,
+                              @PathVariable String regionId,
+                              @PathVariable String locationId,
+                              @PathVariable String tripId,
+                              @RequestBody TripDto tripDto) {
+        return tripService.updateTrip(Long.valueOf(countryId),
+                Long.valueOf(regionId),
+                Long.valueOf(locationId),
+                Long.valueOf(tripId),
+                tripDto);
+    }
+
+    //TODO: Delete by location, by sport
+    @DeleteMapping("/countries/{countryId}/regions/{regionId}/locations/{locationId}/trips/{tripId}")
+    public void deleteTrip(@PathVariable String countryId,
+                              @PathVariable String regionId,
+                              @PathVariable String locationId,
+                              @PathVariable String tripId) {
+        tripService.deleteTrip(Long.valueOf(countryId),
+                Long.valueOf(regionId),
+                Long.valueOf(locationId),
+                Long.valueOf(tripId));
+    }
 }
