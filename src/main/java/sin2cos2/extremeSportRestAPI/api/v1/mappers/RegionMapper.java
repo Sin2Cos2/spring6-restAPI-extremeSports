@@ -13,7 +13,7 @@ public interface RegionMapper {
 
     RegionMapper INSTANCE = Mappers.getMapper(RegionMapper.class);
 
-    @Mapping(source = "id", target = "regionURI", qualifiedByName = "regionURI")
+    @Mapping(target = "regionURI", expression = "java(regionURI(region.getId(), region.getCountry()))")
     @Mapping(source = "country", target = "countryURI", qualifiedByName = "countryURI")
     RegionDto regionToRegionDto(Region region);
 
@@ -23,8 +23,8 @@ public interface RegionMapper {
     Region regionDtoToRegion(RegionDto regionDto);
 
     @Named("regionURI")
-    default String regionURI(Long id) {
-        return "/api/v1/regions/" + id;
+    default String regionURI(Long id, Country country) {
+        return "/api/v1/countries/" + country.getId() + "/regions/" + id;
     }
 
     @Named("countryURI")

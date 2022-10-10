@@ -4,13 +4,10 @@ import lombok.*;
 
 import java.io.Serializable;
 
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class CountryDto implements Serializable {
-
-    private String name;
-    private String countryURI;
+public abstract class TripURI implements Serializable {
+    private String tripURI;
 }

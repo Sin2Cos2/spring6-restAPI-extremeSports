@@ -24,5 +24,5 @@ public class Sport {
     private String name;
 
     @OneToMany(mappedBy = "sport", cascade = CascadeType.ALL)
-    private Set<SportLocation> sportLocations = new LinkedHashSet<>();
+    private Set<Trip> trips = new LinkedHashSet<>();
 }

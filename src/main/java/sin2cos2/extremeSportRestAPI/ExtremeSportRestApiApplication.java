@@ -5,9 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class ExtremeSportRestApiApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(ExtremeSportRestApiApplication.class, args);
-	}
+    //TODO: Добавить валидацию
+    //TODO: Добавить тесты
+    public static void main(String[] args) {
+        SpringApplication.run(ExtremeSportRestApiApplication.class, args);
+    }
 
 }

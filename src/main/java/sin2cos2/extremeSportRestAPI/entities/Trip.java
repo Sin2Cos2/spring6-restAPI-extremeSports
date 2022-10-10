@@ -12,8 +12,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name = "Sport_Location")
-public class SportLocation {
+@Table(name = "trip")
+public class Trip {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

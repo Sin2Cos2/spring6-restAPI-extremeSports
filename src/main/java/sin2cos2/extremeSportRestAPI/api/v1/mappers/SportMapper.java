@@ -15,7 +15,7 @@ public interface SportMapper {
     @Mapping(source = "id", target ="sportURI", qualifiedByName = "sportURI")
     SportDto sportToSportDto(Sport sport);
 
-    @Mapping(target = "sportLocations", ignore = true)
+    @Mapping(target = "trips", ignore = true)
     @Mapping(target = "id", ignore = true)
     Sport sportDtoToSport(SportDto sportDto);
 
