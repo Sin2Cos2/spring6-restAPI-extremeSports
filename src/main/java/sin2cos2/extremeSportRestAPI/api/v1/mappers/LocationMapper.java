@@ -14,11 +14,9 @@ public interface LocationMapper {
 
     LocationMapper INSTANCE = Mappers.getMapper(LocationMapper.class);
 
-    @Mapping(target = "locationURI",
-            expression = "java(locationURI(location.getId(), location.getRegion(), location.getCountry()))")
-    @Mapping(target = "regionURI",
-            expression = "java(regionURI(location.getRegion(), location.getCountry()))")
-    @Mapping(source = "country", target = "countryURI", qualifiedByName = "countryURI")
+    @Mapping(target = "locationURI", source = "id", qualifiedByName = "locationURI")
+    @Mapping(target = "regionURI", source = "region", qualifiedByName = "regionURI")
+    @Mapping(target = "countryURI", source = "country", qualifiedByName = "countryURI")
     LocationDto locationToLocationDto(Location location);
 
     @Mapping(target = "trips", ignore = true)
@@ -28,13 +26,13 @@ public interface LocationMapper {
     Location locationDtoToLocation(LocationDto locationDto);
 
     @Named("locationURI")
-    default String locationURI(Long id, Region region, Country country) {
-        return "/api/v1/countries/" + country.getId() + "/regions/" + region.getId() + "/locations/" + id;
+    default String locationURI(Long id) {
+        return "/api/v1/locations/" + id;
     }
 
     @Named("regionURI")
-    default String regionURI(Region region, Country country) {
-        return "/api/v1/countries/" + country.getId() + "/regions/" + region.getId();
+    default String regionURI(Region region) {
+        return "/api/v1/regions/" + region.getId();
     }
 
     @Named("countryURI")

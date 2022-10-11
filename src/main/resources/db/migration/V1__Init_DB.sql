@@ -32,7 +32,7 @@ CREATE TABLE sport_location
 (
     location_id int8,
     sport_id int8,
-    price decimal,
+    price decimal(19, 4),
     start_date date,
     end_date date
 )

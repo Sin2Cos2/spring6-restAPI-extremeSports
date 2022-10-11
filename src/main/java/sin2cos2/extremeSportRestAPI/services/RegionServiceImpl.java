@@ -2,6 +2,7 @@ package sin2cos2.extremeSportRestAPI.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.RegionDto;
 import sin2cos2.extremeSportRestAPI.api.v1.mappers.RegionMapper;
 import sin2cos2.extremeSportRestAPI.entities.Country;
@@ -39,16 +40,6 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public RegionDto getRegionDtoById(Long regionId, Long countryId) {
-        RegionDto region = getRegionDtoById(regionId);
-
-        if (!region.getCountryURI().contains("/" + countryId))
-            throw new NotFoundException("No Regions with id: " + regionId + " in this country");
-
-        return region;
-    }
-
-    @Override
     public Region getRegionById(Long id) {
         return regionRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Region with id: " + id + " wasn't found"));
@@ -77,21 +68,26 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public RegionDto updateRegion(Long regionId, Long countryId, RegionDto regionDto) {
+    public RegionDto updateRegion(Long regionId, RegionDto regionDto) {
         Optional<Region> regionOptional = regionRepository.findById(regionId);
 
-        if (regionOptional.isPresent()) {
-            Region region = regionOptional.get();
-            region.setName(regionDto.getName());
+        if (regionOptional.isEmpty())
+            throw new NotFoundException("Region with id: " + regionId + " wasn't found");
 
-            return regionMapper.regionToRegionDto(region);
-        }
+        Region region = regionOptional.get();
+        region.setName(regionDto.getName());
 
-        return saveRegion(countryId, regionDto);
+        return regionMapper.regionToRegionDto(region);
     }
 
     @Override
-    public void deleteRegion(Long regionId, Long countryId) {
+    public void deleteRegion(Long regionId) {
         regionRepository.deleteById(regionId);
+    }
+
+    @Transactional
+    @Override
+    public void deleteAllRegionsByCountry(Long countryId) {
+        regionRepository.deleteRegionsByCountryId(countryId);
     }
 }

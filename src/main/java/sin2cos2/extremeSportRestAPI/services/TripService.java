@@ -7,19 +7,23 @@ import java.util.Set;
 public interface TripService {
     Set<TripDto> getAllTrips();
 
-    Set<TripDto> getAllTripsByLocation(Long countryId, Long regionId, Long locationId);
+    Set<TripDto> getAllTripsByLocationAndSport(Long locationId, Long sportId);
+
+    Set<TripDto> getAllTripsByLocation(Long countryId);
 
     Set<TripDto> getAllTripsBySport(Long sportId);
 
     TripDto getTripById(Long tripId);
 
-    TripDto getTripByLocation(Long countryId, Long regionId, Long locationId, Long tripId);
+    TripDto saveTrip(Long locationId, Long sportId, TripDto tripDto);
 
-    TripDto getTripBySport(Long sportId, Long tripId);
+    TripDto updateTrip(Long tripId, TripDto tripDto);
 
-    TripDto saveTrip(Long countryId, Long regionId, Long locationId, Long sportId, TripDto tripDto);
+    void deleteTrip(Long tripId);
 
-    TripDto updateTrip(Long countryId, Long regionId, Long locationId, Long tripId, TripDto tripDto);
+    void deleteTripsByLocationAndSport(Long locationId, Long sportId);
 
-    void deleteTrip(Long countryId, Long regionId, Long locationId, Long tripId);
+    void deleteTripsByLocation(Long locationId);
+
+    void deleteTripsBySport(Long sportId);
 }

@@ -8,4 +8,6 @@ import java.util.Set;
 public interface RegionRepository extends JpaRepository<Region, Long> {
 
     Set<Region> findByCountryId(Long id);
+
+    void deleteRegionsByCountryId(Long countryId);
 }

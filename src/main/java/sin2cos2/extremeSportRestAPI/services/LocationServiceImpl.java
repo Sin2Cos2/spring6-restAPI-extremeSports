@@ -2,6 +2,7 @@ package sin2cos2.extremeSportRestAPI.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.LocationDto;
 import sin2cos2.extremeSportRestAPI.api.v1.mappers.LocationMapper;
 import sin2cos2.extremeSportRestAPI.entities.Country;
@@ -24,9 +25,18 @@ public class LocationServiceImpl implements LocationService {
     private final LocationMapper locationMapper = LocationMapper.INSTANCE;
 
     @Override
-    public Set<LocationDto> getLocationsByCountryAndRegion(Long regionId, Long countryId) {
+    public Set<LocationDto> getLocationsByRegion(Long regionId) {
         return locationRepository
-                .getLocationByRegionIdAndCountryId(regionId, countryId)
+                .getLocationByRegionId(regionId)
+                .stream()
+                .map(locationMapper::locationToLocationDto)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<LocationDto> getLocationsByCountry(Long countryId) {
+        return locationRepository
+                .getLocationByCountryId(countryId)
                 .stream()
                 .map(locationMapper::locationToLocationDto)
                 .collect(Collectors.toSet());
@@ -42,26 +52,10 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public LocationDto getLocationDtoById(Long locationId, Long regionId, Long countryId) {
-        LocationDto locationDto = getLocationDtoById(locationId);
-
-        String regionURI = "/regions/" + regionId;
-        String countryURI = "/countries/" + countryId;
-
-        if(!locationDto.getCountryURI().contains(countryURI))
-            throw new NotFoundException("No Location with id: " + locationId + " in this country");
-
-        if(!locationDto.getRegionURI().contains(regionURI))
-            throw new NotFoundException("No Location with id: " + locationId + " in this region");
-
-        return locationDto;
-    }
-
-    @Override
     public LocationDto getLocationDtoById(Long locationId) {
         Optional<Location> locationOptional = locationRepository.findById(locationId);
 
-        if(locationOptional.isEmpty())
+        if (locationOptional.isEmpty())
             throw new NotFoundException("Location with id: " + locationId + " wasn't found");
 
         Location location = locationOptional.get();
@@ -87,21 +81,32 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public LocationDto updateLocation(LocationDto locationDto, Long locationId, Long regionId, Long countryId) {
+    public LocationDto updateLocation(LocationDto locationDto, Long locationId) {
         Optional<Location> locationOptional = locationRepository.findById(locationId);
 
-        if (locationOptional.isPresent()) {
-            Location location = locationOptional.get();
-            location.setName(locationDto.getName());
+        if (locationOptional.isEmpty())
+            throw new NotFoundException("Location with id: " + locationId + " wasn't found");
 
-            return locationMapper.locationToLocationDto(locationRepository.save(location));
-        }
+        Location location = locationOptional.get();
+        location.setName(locationDto.getName());
 
-        return saveLocation(locationDto, regionId, countryId);
+        return locationMapper.locationToLocationDto(locationRepository.save(location));
     }
 
     @Override
-    public void deleteLocation(Long locationId, Long regionId, Long countryId) {
+    public void deleteLocation(Long locationId) {
         locationRepository.deleteById(locationId);
+    }
+
+    @Transactional
+    @Override
+    public void deleteLocationsByRegion(Long regionId) {
+        locationRepository.deleteLocationsByRegionId(regionId);
+    }
+
+    @Transactional
+    @Override
+    public void deleteLocationsByCountry(Long countryId) {
+        locationRepository.deleteLocationsByCountryId(countryId);
     }
 }

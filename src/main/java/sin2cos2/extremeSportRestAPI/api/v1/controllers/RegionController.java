@@ -10,47 +10,46 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/regions")
 public class RegionController {
 
     private final RegionService regionService;
 
-    @GetMapping("/countries/{countryId}/regions")
-    public Set<RegionDto> getRegionsByCountry(@PathVariable String countryId) {
-        return regionService.getRegionsByCountry(Long.valueOf(countryId));
-    }
+    @GetMapping
+    public Set<RegionDto> getAllRegions(@RequestParam(required = false) String countryId) {
 
-    @GetMapping("/regions")
-    public Set<RegionDto> getAllRegions() {
+        if (countryId != null)
+            return regionService.getRegionsByCountry(Long.valueOf(countryId));
+
         return regionService.getAllRegions();
     }
 
-    @GetMapping({"/regions/{regionId}", "/countries/{countryId}/regions/{regionId}"})
-    public RegionDto getRegionById(@PathVariable(required = false) String countryId,
-                                   @PathVariable String regionId) {
-        if (countryId == null)
-            return regionService.getRegionDtoById(Long.valueOf(regionId));
-
-        return regionService.getRegionDtoById(Long.valueOf(regionId), Long.valueOf(countryId));
+    @GetMapping("/{regionId}")
+    public RegionDto getRegionById(@PathVariable String regionId) {
+        return regionService.getRegionDtoById(Long.valueOf(regionId));
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/countries/{countryId}/regions")
-    public RegionDto saveRegion(@PathVariable String countryId,
+    @PostMapping
+    public RegionDto saveRegion(@RequestParam String countryId,
                                 @RequestBody RegionDto regionDto) {
         return regionService.saveRegion(Long.valueOf(countryId), regionDto);
     }
 
-    @PutMapping("/countries/{countryId}/regions/{regionId}")
+    @PutMapping("/{regionId}")
     public RegionDto updateRegion(@PathVariable String regionId,
-                                  @PathVariable String countryId,
                                   @RequestBody RegionDto regionDto) {
-        return regionService.updateRegion(Long.valueOf(regionId), Long.valueOf(countryId), regionDto);
+        return regionService.updateRegion(Long.valueOf(regionId), regionDto);
     }
 
-    @DeleteMapping("/countries/{countryId}/regions/{regionId}")
-    public void deleteRegion(@PathVariable String countryId, @PathVariable String regionId) {
-        regionService.deleteRegion(Long.valueOf(regionId), Long.valueOf(countryId));
+    @DeleteMapping
+    public void deleteRegions(@RequestParam String countryId) {
+        regionService.deleteAllRegionsByCountry(Long.valueOf(countryId));
+    }
+
+    @DeleteMapping("/{regionId}")
+    public void deleteRegion(@PathVariable String regionId) {
+        regionService.deleteRegion(Long.valueOf(regionId));
     }
 
 }

@@ -9,56 +9,59 @@ import sin2cos2.extremeSportRestAPI.services.LocationService;
 import java.util.Set;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/locations")
 @RestController
 public class LocationController {
 
     private final LocationService locationService;
 
-    @GetMapping("/countries/{countryId}/regions/{regionId}/locations")
-    public Set<LocationDto> getLocationsByCountryAndRegion(@PathVariable String countryId,
-                                                           @PathVariable String regionId) {
-        return locationService.getLocationsByCountryAndRegion(Long.valueOf(regionId), Long.valueOf(countryId));
-    }
+    @GetMapping
+    public Set<LocationDto> getAllLocations(@RequestParam(required = false) String countryId,
+                                            @RequestParam(required = false) String regionId) {
 
-    @GetMapping("/locations")
-    public Set<LocationDto> getAllLocations() {
+        if (regionId != null)
+            return locationService.getLocationsByRegion(Long.valueOf(regionId));
+
+        if (countryId != null) {
+            return locationService.getLocationsByCountry(Long.valueOf(countryId));
+        }
+
         return locationService.getAllLocations();
     }
 
-    @GetMapping({"/locations/{locationId}", "/countries/{countryId}/regions/{regionId}/locations/{locationId}"})
-    public LocationDto getLocationById(@PathVariable(required = false) String countryId,
-                                       @PathVariable(required = false) String regionId,
-                                       @PathVariable String locationId) {
+    @GetMapping("/{locationId}")
+    public LocationDto getLocationById(@PathVariable String locationId) {
 
-        if (countryId == null || regionId == null)
-            return locationService.getLocationDtoById(Long.valueOf(locationId));
-
-        return locationService
-                .getLocationDtoById(Long.valueOf(locationId), Long.valueOf(regionId), Long.valueOf(countryId));
+        return locationService.getLocationDtoById(Long.valueOf(locationId));
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/countries/{countryId}/regions/{regionId}/locations")
-    public LocationDto saveLocation(@PathVariable String countryId,
-                                    @PathVariable String regionId,
+    @PostMapping
+    public LocationDto saveLocation(@RequestParam String countryId,
+                                    @RequestParam String regionId,
                                     @RequestBody LocationDto locationDto) {
         return locationService.saveLocation(locationDto, Long.valueOf(regionId), Long.valueOf(countryId));
     }
 
-    @PutMapping("/countries/{countryId}/regions/{regionId}/locations/{locationsId}")
-    public LocationDto updateLocation(@PathVariable String countryId,
-                                      @PathVariable String locationsId,
-                                      @PathVariable String regionId,
+    @PutMapping("/{locationsId}")
+    public LocationDto updateLocation(@PathVariable String locationsId,
                                       @RequestBody LocationDto locationDto) {
-        return locationService
-                .updateLocation(locationDto, Long.valueOf(locationsId), Long.valueOf(regionId), Long.valueOf(countryId));
+        return locationService.updateLocation(locationDto, Long.valueOf(locationsId));
     }
 
-    @DeleteMapping("/countries/{countryId}/regions/{regionId}/locations/{locationsId}")
-    public void deleteLocation(@PathVariable String countryId,
-                               @PathVariable String locationsId,
-                               @PathVariable String regionId) {
-        locationService.deleteLocation(Long.valueOf(locationsId), Long.valueOf(regionId), Long.valueOf(countryId));
+    @DeleteMapping
+    public void deleteLocations(@RequestParam(required = false) String countryId,
+                                @RequestParam(required = false) String regionId) {
+
+        if (regionId != null) {
+            locationService.deleteLocationsByRegion(Long.valueOf(regionId));
+        } else if (countryId != null){
+            locationService.deleteLocationsByCountry(Long.valueOf(countryId));
+        }
+    }
+
+    @DeleteMapping("/{locationsId}")
+    public void deleteLocation(@PathVariable String locationsId) {
+        locationService.deleteLocation(Long.valueOf(locationsId));
     }
 }

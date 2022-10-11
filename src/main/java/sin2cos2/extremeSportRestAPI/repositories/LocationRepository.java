@@ -7,5 +7,11 @@ import java.util.Set;
 
 public interface LocationRepository extends JpaRepository<Location, Long> {
 
-    Set<Location> getLocationByRegionIdAndCountryId(Long regionId, Long countryId);
+    Set<Location> getLocationByRegionId(Long regionId);
+
+    Set<Location> getLocationByCountryId(Long countryId);
+
+    void deleteLocationsByRegionId(Long regionId);
+
+    void deleteLocationsByCountryId(Long countryId);
 }

@@ -10,15 +10,15 @@ public interface RegionService {
 
     Set<RegionDto> getAllRegions();
 
-    RegionDto getRegionDtoById(Long id, Long countryId);
-
     Region getRegionById(Long id);
+
+    RegionDto getRegionDtoById(Long regionId);
 
     RegionDto saveRegion(Long countryId, RegionDto regionDto);
 
-    RegionDto updateRegion(Long regionId, Long countryId, RegionDto regionDto);
+    RegionDto updateRegion(Long regionId, RegionDto regionDto);
 
-    void deleteRegion(Long regionId, Long countryId);
+    void deleteRegion(Long regionId);
 
-    RegionDto getRegionDtoById(Long regionId);
+    void deleteAllRegionsByCountry(Long countryId);
 }

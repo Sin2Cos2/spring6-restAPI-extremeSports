@@ -15,7 +15,7 @@ public class CountryController {
 
     private final CountryService countryService;
 
-    @GetMapping({"", "/"})
+    @GetMapping
     public Set<CountryDto> getAllCountries() {
         return countryService.getAllCountries();
     }

@@ -10,91 +10,62 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/trips")
 public class TripController {
 
     private final TripService tripService;
 
-    @GetMapping("/trips")
-    public Set<TripDto> getAllTrips() {
+    @GetMapping
+    public Set<TripDto> getAllTrips(@RequestParam(required = false) String locationId,
+                                    @RequestParam(required = false) String sportId) {
+
+        if (locationId != null && sportId != null) {
+            return tripService.getAllTripsByLocationAndSport(Long.valueOf(locationId), Long.valueOf(sportId));
+        }
+        if (locationId != null) {
+            return tripService.getAllTripsByLocation(Long.valueOf(locationId));
+        }
+        if (sportId != null) {
+            return tripService.getAllTripsBySport(Long.valueOf(sportId));
+        }
+
         return tripService.getAllTrips();
     }
 
-    @GetMapping("/countries/{countryId}/regions/{regionId}/locations/{locationId}/trips")
-    public Set<TripDto> getAllTripsByLocation(@PathVariable String countryId,
-                                              @PathVariable String regionId,
-                                              @PathVariable String locationId) {
-        return tripService.getAllTripsByLocation(Long.valueOf(countryId),
-                Long.valueOf(regionId),
-                Long.valueOf(locationId));
-    }
-
-    @GetMapping("/sports/{sportId}/trips")
-    public Set<TripDto> getAllTripsBySport(@PathVariable String sportId) {
-        return tripService.getAllTripsBySport(Long.valueOf(sportId));
-    }
-
-    @GetMapping("/trips/{tripId}")
+    @GetMapping("/{tripId}")
     public TripDto getTripById(@PathVariable String tripId) {
         return tripService.getTripById(Long.valueOf(tripId));
     }
 
-    @GetMapping("/countries/{countryId}/regions/{regionId}/locations/{locationId}/trips/{tripId}")
-    public TripDto getTripByLocation(@PathVariable String countryId,
-                                     @PathVariable String regionId,
-                                     @PathVariable String locationId,
-                                     @PathVariable String tripId) {
-        return tripService
-                .getTripByLocation(Long.valueOf(countryId),
-                        Long.valueOf(regionId),
-                        Long.valueOf(locationId),
-                        Long.valueOf(tripId));
-    }
-
-    @GetMapping("/sports/{sportId}/trips/{tripId}")
-    public TripDto getTripBySport(@PathVariable String sportId,
-                                  @PathVariable String tripId) {
-        return tripService.getTripBySport(Long.valueOf(sportId), Long.valueOf(tripId));
-    }
-
-    //TODO: Post new relationship
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/countries/{countryId}/regions/{regionId}/locations/{locationId}/trips")
-    public TripDto saveTrip(@PathVariable String countryId,
-                            @PathVariable String regionId,
-                            @PathVariable String locationId,
+    @PostMapping
+    public TripDto saveTrip(@RequestParam String locationId,
                             @RequestParam String sportId,
                             @RequestBody TripDto tripDto) {
-        return tripService.saveTrip(Long.valueOf(countryId),
-                Long.valueOf(regionId),
-                Long.valueOf(locationId),
-                Long.valueOf(sportId),
-                tripDto);
+        return tripService.saveTrip(Long.valueOf(locationId), Long.valueOf(sportId), tripDto);
     }
 
-    //TODO: Put update by location, by sport
-    @PutMapping("/countries/{countryId}/regions/{regionId}/locations/{locationId}/trips/{tripId}")
-    public TripDto updateTrip(@PathVariable String countryId,
-                              @PathVariable String regionId,
-                              @PathVariable String locationId,
-                              @PathVariable String tripId,
+    @PutMapping("/{tripId}")
+    public TripDto updateTrip(@PathVariable String tripId,
                               @RequestBody TripDto tripDto) {
-        return tripService.updateTrip(Long.valueOf(countryId),
-                Long.valueOf(regionId),
-                Long.valueOf(locationId),
-                Long.valueOf(tripId),
-                tripDto);
+        return tripService.updateTrip(Long.valueOf(tripId), tripDto);
     }
 
-    //TODO: Delete by location, by sport
-    @DeleteMapping("/countries/{countryId}/regions/{regionId}/locations/{locationId}/trips/{tripId}")
-    public void deleteTrip(@PathVariable String countryId,
-                              @PathVariable String regionId,
-                              @PathVariable String locationId,
-                              @PathVariable String tripId) {
-        tripService.deleteTrip(Long.valueOf(countryId),
-                Long.valueOf(regionId),
-                Long.valueOf(locationId),
-                Long.valueOf(tripId));
+    @DeleteMapping
+    public void deleteTrips(@RequestParam(required = false) String locationId,
+                            @RequestParam(required = false) String sportId) {
+
+        if (locationId != null && sportId != null) {
+            tripService.deleteTripsByLocationAndSport(Long.valueOf(locationId), Long.valueOf(sportId));
+        } else if (locationId != null) {
+            tripService.deleteTripsByLocation(Long.valueOf(locationId));
+        } else if (sportId != null) {
+            tripService.deleteTripsBySport(Long.valueOf(sportId));
+        }
+    }
+
+    @DeleteMapping("/{tripId}")
+    public void deleteTrip(@PathVariable String tripId) {
+        tripService.deleteTrip(Long.valueOf(tripId));
     }
 }

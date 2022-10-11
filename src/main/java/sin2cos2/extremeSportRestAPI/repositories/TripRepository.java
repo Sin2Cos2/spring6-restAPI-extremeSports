@@ -9,4 +9,12 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
     Set<Trip> findAllByLocationId(Long locationId);
 
     Set<Trip> findAllBySportId(Long sportId);
+
+    Set<Trip> findAllByLocationIdAndSportId(Long locationId, Long sportId);
+
+    void deleteTripsByLocationIdAndSportId(Long locationId, Long sportId);
+
+    void deleteTripsByLocationId(Long locationId);
+
+    void deleteTripsBySportId(Long sportId);
 }

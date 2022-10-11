@@ -2,6 +2,7 @@ package sin2cos2.extremeSportRestAPI.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.TripDto;
 import sin2cos2.extremeSportRestAPI.api.v1.mappers.TripMapper;
 import sin2cos2.extremeSportRestAPI.entities.Location;
@@ -33,12 +34,19 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public Set<TripDto> getAllTripsByLocation(Long countryId, Long regionId, Long locationId) {
+    public Set<TripDto> getAllTripsByLocationAndSport(Long locationId, Long sportId) {
+        return tripRepository
+                .findAllByLocationIdAndSportId(locationId, sportId)
+                .stream()
+                .map(tripMapper::tripToTripDto)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<TripDto> getAllTripsByLocation(Long locationId) {
         return tripRepository
                 .findAllByLocationId(locationId)
                 .stream()
-                .filter(trip -> trip.getLocation().getCountry().getId().equals(countryId))
-                .filter(trip -> trip.getLocation().getRegion().getId().equals(regionId))
                 .map(tripMapper::tripToTripDto)
                 .collect(Collectors.toSet());
     }
@@ -63,37 +71,7 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public TripDto getTripByLocation(Long countryId, Long regionId, Long locationId, Long tripId) {
-        TripDto tripDto = getTripById(tripId);
-        String countryURI = "/api/v1/countries/" + countryId;
-        String regionURI = countryURI + "/regions/" + regionId;
-        String locationURI = regionURI + "/locations/" + locationId;
-
-        if (!tripDto.getLocationTripURI().getLocationURI().contains(countryURI))
-            throw new NotFoundException("No Trip with id: " + tripId + " in this country");
-
-        if (!tripDto.getLocationTripURI().getLocationURI().contains(regionURI))
-            throw new NotFoundException("No Trip with id: " + tripId + " in this region");
-
-        if (!tripDto.getLocationTripURI().getLocationURI().contains(locationURI))
-            throw new NotFoundException("No Trip with id: " + tripId + " in this location");
-
-        return tripDto;
-    }
-
-    @Override
-    public TripDto getTripBySport(Long sportId, Long tripId) {
-        TripDto tripDto = getTripById(tripId);
-        String sportURI = "/sports/" + sportId;
-
-        if (!tripDto.getSportTripURI().getSportURI().contains(sportURI))
-            throw new NotFoundException("No Trip with id: " + tripId + " with this sport");
-
-        return tripDto;
-    }
-
-    @Override
-    public TripDto saveTrip(Long countryId, Long regionId, Long locationId, Long sportId, TripDto tripDto) {
+    public TripDto saveTrip(Long locationId, Long sportId, TripDto tripDto) {
         Trip trip = tripMapper.tripDtoToTrip(tripDto);
         Location location = locationService.getLocationById(locationId);
         Sport sport = sportService.getSportById(sportId);
@@ -105,24 +83,41 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public TripDto updateTrip(Long countryId, Long regionId, Long locationId, Long tripId, TripDto tripDto) {
+    public TripDto updateTrip(Long tripId, TripDto tripDto) {
         Optional<Trip> tripOptional = tripRepository.findById(tripId);
 
-        if (tripOptional.isPresent()) {
-            Trip trip = tripOptional.get();
-            trip.setPrice(tripDto.getPrice());
-            trip.setStartDate(tripDto.getStartDate());
-            trip.setEndDate(tripDto.getEndDate());
+        if (tripOptional.isEmpty())
+            throw new NotFoundException("Trip with id: " + tripId + " wasn't found");
 
-            return tripMapper.tripToTripDto(tripRepository.save(trip));
-        }
+        Trip trip = tripOptional.get();
+        trip.setPrice(tripDto.getPrice());
+        trip.setStartDate(tripDto.getStartDate());
+        trip.setEndDate(tripDto.getEndDate());
 
-        return saveTrip(countryId, regionId, locationId, tripId, tripDto);
+        return tripMapper.tripToTripDto(tripRepository.save(trip));
+
     }
 
     @Override
-    public void deleteTrip(Long countryId, Long regionId, Long locationId, Long tripId) {
+    public void deleteTrip(Long tripId) {
         tripRepository.deleteById(tripId);
+    }
+
+    @Transactional
+    @Override
+    public void deleteTripsByLocationAndSport(Long locationId, Long sportId) {
+        tripRepository.deleteTripsByLocationIdAndSportId(locationId, sportId);
+    }
+
+    @Transactional
+    @Override
+    public void deleteTripsByLocation(Long locationId) {
+        tripRepository.deleteTripsByLocationId(locationId);
+    }
+
+    @Override
+    public void deleteTripsBySport(Long sportId) {
+        tripRepository.deleteTripsBySportId(sportId);
     }
 
 }
