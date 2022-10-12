@@ -19,6 +19,8 @@ public interface TripService {
 
     TripDto updateTrip(Long tripId, TripDto tripDto);
 
+    TripDto patchTrip(Long tripId, TripDto tripDto);
+
     void deleteTrip(Long tripId);
 
     void deleteTripsByLocationAndSport(Long locationId, Long sportId);

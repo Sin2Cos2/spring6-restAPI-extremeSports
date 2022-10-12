@@ -77,7 +77,7 @@ public class RegionServiceImpl implements RegionService {
         Region region = regionOptional.get();
         region.setName(regionDto.getName());
 
-        return regionMapper.regionToRegionDto(region);
+        return regionMapper.regionToRegionDto(regionRepository.save(region));
     }
 
     @Override

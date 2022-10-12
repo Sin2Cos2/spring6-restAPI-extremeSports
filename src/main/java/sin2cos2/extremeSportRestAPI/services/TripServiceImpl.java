@@ -99,6 +99,25 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
+    public TripDto patchTrip(Long tripId, TripDto tripDto) {
+        Optional<Trip> tripOptional = tripRepository.findById(tripId);
+
+        if (tripOptional.isEmpty())
+            throw new NotFoundException("Trip with id: " + tripId + " wasn't found");
+
+        Trip trip = tripOptional.get();
+
+        if (tripDto.getPrice() != null)
+            trip.setPrice(tripDto.getPrice());
+        if (tripDto.getStartDate() != null)
+            trip.setStartDate(tripDto.getStartDate());
+        if (tripDto.getEndDate() != null)
+            trip.setEndDate(tripDto.getEndDate());
+
+        return tripMapper.tripToTripDto(tripRepository.save(trip));
+    }
+
+    @Override
     public void deleteTrip(Long tripId) {
         tripRepository.deleteById(tripId);
     }
