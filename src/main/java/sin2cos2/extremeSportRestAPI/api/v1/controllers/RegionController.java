@@ -51,8 +51,10 @@ public class RegionController {
     @Operation(summary = "Delete region by country id",
     description = "Specify country id as query param if you want to delete all regions for certain country")
     @DeleteMapping
-    public void deleteRegions(@RequestParam String countryId) {
-        regionService.deleteAllRegionsByCountry(Long.valueOf(countryId));
+    public void deleteRegions(@RequestParam(required = false) String countryId) {
+
+        if (countryId != null)
+            regionService.deleteAllRegionsByCountry(Long.valueOf(countryId));
     }
 
     @Operation(summary = "Delete region by id")
