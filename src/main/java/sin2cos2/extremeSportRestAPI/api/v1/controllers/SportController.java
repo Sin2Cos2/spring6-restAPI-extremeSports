@@ -2,6 +2,7 @@ package sin2cos2.extremeSportRestAPI.api.v1.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.SportDto;
 import sin2cos2.extremeSportRestAPI.services.SportService;
@@ -28,6 +29,7 @@ public class SportController {
     }
 
     @Operation(summary = "Save new sport")
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public SportDto saveSport(@RequestBody SportDto sportDto) {
         return sportService.saveSport(sportDto);
