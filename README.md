@@ -1,5 +1,5 @@
 # Description
-REST API for managing a service for a site that will help you find extreme recreation.
+REST API for managing a service for a site that will help you find extreme adventure trips where you can spend holidays.
 All available endpoints are listed below. If a particular endpoint can accept query params, they will be found below, along with the data type they accept. 
 A more extensive description of each endpoint is available at /swagger-ui/index.html
 
