@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/circleci/circleci-docs.svg?style=svg)](https://circleci.com/gh/circleci/circleci-docs)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/Sin2Cos2/spring5-restAPI-extremeSports/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/Sin2Cos2/spring5-restAPI-extremeSports/tree/master)
 
 # Description
 REST API for managing a service for a site that will help you find extreme recreation.
