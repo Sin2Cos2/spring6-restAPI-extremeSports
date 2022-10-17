@@ -1,3 +1,5 @@
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/Sin2Cos2/spring5-restAPI-extremeSports/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/Sin2Cos2/spring5-restAPI-extremeSports/tree/master)
+
 # Description
 REST API for managing a service for a site that will help you find extreme adventure trips where you can spend holidays.
 All available endpoints are listed below. If a particular endpoint can accept query params, they will be found below, along with the data type they accept. 
