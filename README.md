@@ -1,4 +1,4 @@
-[![ExtreneSports](https://circleci.com/gh/extremeSports/extremeSports.svg?style=svg)]
+[![CircleCI](https://circleci.com/gh/circleci/circleci-docs.svg?style=svg)](https://circleci.com/gh/circleci/circleci-docs)
 
 # Description
 REST API for managing a service for a site that will help you find extreme recreation.
