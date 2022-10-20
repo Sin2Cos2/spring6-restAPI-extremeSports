@@ -15,13 +15,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.CountryDto;
 import sin2cos2.extremeSportRestAPI.services.CountryService;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -60,6 +60,18 @@ class CountryControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @Test
+    void getCountriesByName() throws Exception {
+        Set<CountryDto> countryDtos = new HashSet<>();
+        countryDtos.add(CountryDto.builder().build());
+
+        when(countryService.getCountriesByName(anyString())).thenReturn(countryDtos);
+
+        mockMvc.perform(get(BASE_URL + "?name=test"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 
     @Test

@@ -30,6 +30,14 @@ public class SportServiceImpl implements SportService {
     }
 
     @Override
+    public Set<SportDto> getSportByName(String name) {
+        return sportRepository.getSportsByName(name, PageRequest.of(0, 10))
+                .stream()
+                .map(sportMapper::sportToSportDto)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
     public SportDto getSportDtoById(Long sportId) {
         Optional<Sport> sport = sportRepository.findById(sportId);
 

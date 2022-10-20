@@ -42,6 +42,12 @@ class CountryServiceTest extends ServiceTest {
     }
 
     @Test
+    void getCountriesByName() {
+
+        assertThat(countryService.getCountriesByName("Russia").size()).isEqualTo(1);
+    }
+
+    @Test
     void getCountryDtoById() {
         CountryDto countryDto = countryService.getCountryDtoById(1L);
 

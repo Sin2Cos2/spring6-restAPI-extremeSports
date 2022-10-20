@@ -8,6 +8,8 @@ import java.util.Set;
 public interface SportService {
     Set<SportDto> getAllSports(int page);
 
+    Set<SportDto> getSportByName(String name);
+
     SportDto getSportDtoById(Long sportId);
 
     Sport getSportById(Long sportId);

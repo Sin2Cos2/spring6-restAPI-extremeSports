@@ -9,7 +9,6 @@ import sin2cos2.extremeSportRestAPI.entities.Country;
 import sin2cos2.extremeSportRestAPI.exceptions.NotFoundException;
 import sin2cos2.extremeSportRestAPI.repositories.CountryRepository;
 
-import java.awt.print.Pageable;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,6 +24,15 @@ public class CountryServiceImpl implements CountryService {
     public Set<CountryDto> getAllCountries(int page) {
         return countryRepository
                 .findAll(PageRequest.of(page - 1, 10))
+                .stream()
+                .map(countryMapper::countryToCountryDto)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<CountryDto> getCountriesByName(String name) {
+        return countryRepository
+                .getCountriesByName(name, PageRequest.of(0, 10))
                 .stream()
                 .map(countryMapper::countryToCountryDto)
                 .collect(Collectors.toSet());

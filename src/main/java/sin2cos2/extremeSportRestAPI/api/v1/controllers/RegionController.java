@@ -22,7 +22,7 @@ public class RegionController {
                         
                     By default param page will be set with 1
                     
-                    Specify param name to get set of region by name.
+                    Specify param name to get set of regions by name.
                     Max size of set is 10.
                     """)
     @GetMapping

@@ -8,6 +8,8 @@ import java.util.Set;
 public interface CountryService {
     Set<CountryDto> getAllCountries(int page);
 
+    Set<CountryDto> getCountriesByName(String name);
+
     CountryDto getCountryDtoById(Long id);
 
     Country getCountryById(Long id);

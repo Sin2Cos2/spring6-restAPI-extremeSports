@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.SportDto;
 import sin2cos2.extremeSportRestAPI.services.SportService;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -57,6 +58,19 @@ class SportControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @Test
+    void getSportByName() throws Exception {
+        Set<SportDto> sportDtos = new HashSet<>();
+        sportDtos.add(SportDto.builder().build());
+        sportDtos.add(SportDto.builder().build());
+
+        when(sportService.getSportByName(anyString())).thenReturn(sportDtos);
+
+        mockMvc.perform(get(BASE_URL + "?name=test"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
     }
 
     @Test

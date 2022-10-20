@@ -1,13 +1,11 @@
 package sin2cos2.extremeSportRestAPI.api.v1.controllers;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.info.Info;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import sin2cos2.extremeSportRestAPI.services.CountryService;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.CountryDto;
+import sin2cos2.extremeSportRestAPI.services.CountryService;
 
 import java.util.Set;
 
@@ -18,9 +16,20 @@ public class CountryController {
 
     private final CountryService countryService;
 
-    @Operation(summary = "Get all countries", description = "By default param page will be set with 1")
+    @Operation(summary = "Get all countries",
+            description = """
+                    By default param page will be set with 1.
+                                        
+                    Specify param name to get set of countries by name.
+                    Max size of set is 10.
+                    """)
     @GetMapping
-    public Set<CountryDto> getAllCountries(@RequestParam(defaultValue = "1") int page) {
+    public Set<CountryDto> getAllCountries(@RequestParam(defaultValue = "1") int page,
+                                           @RequestParam(required = false) String name) {
+
+        if (name != null)
+            return countryService.getCountriesByName(name);
+
         return countryService.getAllCountries(page);
     }
 

@@ -16,9 +16,20 @@ public class SportController {
 
     private final SportService sportService;
 
-    @Operation(summary = "Get all sports", description = "By default param page will be set with 1")
+    @Operation(summary = "Get all sports",
+            description = """
+                    By default param page will be set with 1.
+                                        
+                    Specify param name to get set of sports by name.
+                    Max size of set is 10.
+                    """)
     @GetMapping
-    public Set<SportDto> getAllSports(@RequestParam(defaultValue = "1") int page) {
+    public Set<SportDto> getAllSports(@RequestParam(defaultValue = "1") int page,
+                                      @RequestParam(required = false) String name) {
+
+        if (name != null)
+            return sportService.getSportByName(name);
+
         return sportService.getAllSports(page);
     }
 
