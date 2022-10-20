@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.LocationDto;
 import sin2cos2.extremeSportRestAPI.entities.Location;
+import sin2cos2.extremeSportRestAPI.exceptions.WrongHierarchyBind;
 import sin2cos2.extremeSportRestAPI.repositories.CountryRepository;
 import sin2cos2.extremeSportRestAPI.repositories.LocationRepository;
 import sin2cos2.extremeSportRestAPI.repositories.RegionRepository;
@@ -14,6 +15,7 @@ import sin2cos2.extremeSportRestAPI.repositories.TripRepository;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LocationServiceTest extends ServiceTest {
@@ -99,6 +101,16 @@ class LocationServiceTest extends ServiceTest {
         assertThat(saved.getLocationURI()).isNotNull();
         assertTrue(saved.getRegionURI().contains("/regions/1"));
         assertTrue(saved.getCountryURI().contains("/countries/2"));
+    }
+
+    @Test
+    void saveLocationWrongHierarchy() {
+        LocationDto locationDto = LocationDto.builder().build();
+        Exception exception = assertThrows(WrongHierarchyBind.class,
+                () -> locationService.saveLocation(locationDto, 1L, 1L));
+
+        String expectedMessage = "doesn't belong to country with id: " + 1;
+        assertTrue(exception.getMessage().contains(expectedMessage));
     }
 
     @Test

@@ -10,8 +10,10 @@ import sin2cos2.extremeSportRestAPI.entities.Country;
 import sin2cos2.extremeSportRestAPI.entities.Location;
 import sin2cos2.extremeSportRestAPI.entities.Region;
 import sin2cos2.extremeSportRestAPI.exceptions.NotFoundException;
+import sin2cos2.extremeSportRestAPI.exceptions.WrongHierarchyBind;
 import sin2cos2.extremeSportRestAPI.repositories.LocationRepository;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -79,8 +81,13 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public LocationDto saveLocation(LocationDto locationDto, Long regionId, Long countryId) {
-        Location location = locationMapper.locationDtoToLocation(locationDto);
+
         Region region = regionService.getRegionById(regionId);
+
+        if (!Objects.equals(region.getCountry().getId(), countryId))
+            throw new WrongHierarchyBind("Region " + region.getName() + " doesn't belong to country with id: " + countryId);
+
+        Location location = locationMapper.locationDtoToLocation(locationDto);
         Country country = countryService.getCountryById(countryId);
 
         location.setRegion(region);

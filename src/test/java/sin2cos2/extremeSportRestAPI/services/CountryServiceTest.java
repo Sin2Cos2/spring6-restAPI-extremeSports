@@ -106,7 +106,6 @@ class CountryServiceTest extends ServiceTest {
         countryService.updateCountry(7L, new CountryDto());
 
         assertThat(count).isLessThan(countryRepository.count());
-
     }
 
     @Test
