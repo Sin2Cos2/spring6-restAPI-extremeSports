@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.RegionDto;
 import sin2cos2.extremeSportRestAPI.services.RegionService;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -59,6 +60,19 @@ class RegionControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)));
+    }
+
+    @Test
+    void getRegionsByName() throws Exception {
+        Set<RegionDto> regionDtos = new HashSet<>();
+        regionDtos.add(RegionDto.builder().build());
+        regionDtos.add(RegionDto.builder().build());
+
+        when(regionService.getRegionsByName(anyString())).thenReturn(regionDtos);
+
+        mockMvc.perform(get(BASE_URL + "?name=Chisinau"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
     }
 
     @Test

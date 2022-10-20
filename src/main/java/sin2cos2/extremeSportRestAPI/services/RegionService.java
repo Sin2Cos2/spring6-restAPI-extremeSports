@@ -10,6 +10,8 @@ public interface RegionService {
 
     Set<RegionDto> getAllRegions(int page);
 
+    Set<RegionDto> getRegionsByName(String name);
+
     Region getRegionById(Long id);
 
     RegionDto getRegionDtoById(Long regionId);

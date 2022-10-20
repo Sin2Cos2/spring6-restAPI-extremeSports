@@ -61,6 +61,20 @@ class LocationControllerTest {
     }
 
     @Test
+    void getLocationsByName() throws Exception {
+        Set<LocationDto> locationDtoSet = new HashSet<>();
+        locationDtoSet.add(LocationDto.builder().build());
+        locationDtoSet.add(LocationDto.builder().build());
+        locationDtoSet.add(LocationDto.builder().build());
+
+        when(locationService.getLocationsByName(anyString())).thenReturn(locationDtoSet);
+
+        mockMvc.perform(get(BASE_URL + "?name=Test"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)));
+    }
+
+    @Test
     void getLocationsByRegion() throws Exception {
         Set<LocationDto> locationDtoSet = new HashSet<>();
         locationDtoSet.add(new LocationDto());

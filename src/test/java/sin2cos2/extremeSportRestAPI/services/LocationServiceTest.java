@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.LocationDto;
 import sin2cos2.extremeSportRestAPI.entities.Location;
 import sin2cos2.extremeSportRestAPI.repositories.CountryRepository;
@@ -15,9 +14,9 @@ import sin2cos2.extremeSportRestAPI.repositories.TripRepository;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class LocationServiceTest extends ServiceTest{
+class LocationServiceTest extends ServiceTest {
 
     @Autowired
     private CountryRepository countryRepository;
@@ -56,6 +55,16 @@ class LocationServiceTest extends ServiceTest{
         Set<LocationDto> locationDtoSet = locationService.getAllLocations(1);
 
         assertThat(locationDtoSet.size()).isEqualTo(7);
+    }
+
+    @Test
+    void getLocationsByName() {
+        LocationDto testLocation = LocationDto.builder().name("Falesti").build();
+        locationService.saveLocation(testLocation, 2L, 1L);
+
+        Set<LocationDto> locationDtoSet = locationService.getLocationsByName("Falesti");
+
+        assertThat(locationDtoSet.size()).isEqualTo(2);
     }
 
     @Test

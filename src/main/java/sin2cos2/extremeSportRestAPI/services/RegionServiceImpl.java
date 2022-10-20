@@ -41,6 +41,14 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
+    public Set<RegionDto> getRegionsByName(String name) {
+        return regionRepository.findRegionsByName(name, PageRequest.of(0, 10))
+                .stream()
+                .map(regionMapper::regionToRegionDto)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
     public Region getRegionById(Long id) {
         return regionRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Region with id: " + id + " wasn't found"));

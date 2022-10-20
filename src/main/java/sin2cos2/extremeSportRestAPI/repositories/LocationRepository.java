@@ -5,13 +5,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import sin2cos2.extremeSportRestAPI.entities.Location;
 
-import java.util.Set;
-
 public interface LocationRepository extends JpaRepository<Location, Long> {
 
     Page<Location> getLocationByRegionId(Long regionId, Pageable page);
 
     Page<Location> getLocationByCountryId(Long countryId, Pageable page);
+
+    Page<Location> getLocationsByName(String name, Pageable page);
 
     void deleteLocationsByRegionId(Long regionId);
 

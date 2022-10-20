@@ -7,7 +7,9 @@ import sin2cos2.extremeSportRestAPI.entities.Region;
 
 public interface RegionRepository extends JpaRepository<Region, Long> {
 
-    Page<Region> findByCountryId(Long id, Pageable pageable);
+    Page<Region> findByCountryId(Long id, Pageable page);
+
+    Page<Region> findRegionsByName(String name, Pageable page);
 
     void deleteRegionsByCountryId(Long countryId);
 }

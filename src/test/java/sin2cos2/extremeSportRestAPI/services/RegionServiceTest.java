@@ -47,6 +47,13 @@ class RegionServiceTest extends ServiceTest {
     }
 
     @Test
+    void getRegionsByName() {
+        Set<RegionDto> regionDtoSet = regionService.getRegionsByName("Moscow");
+
+        assertThat(regionDtoSet.size()).isEqualTo(1);
+    }
+
+    @Test
     void getRegionById() {
         Region region = regionService.getRegionById(2L);
 

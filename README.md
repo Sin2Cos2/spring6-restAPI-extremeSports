@@ -21,6 +21,8 @@ A more extensive description of each endpoint is available at /swagger-ui/index.
     > countryId=number
     >
     > page=number
+    >
+    > name=string
 - /api/v1/regions/{regionId}                            
 - /api/v1/regions/{regionName}      - To implement                      
 

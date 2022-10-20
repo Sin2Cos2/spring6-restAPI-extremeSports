@@ -25,18 +25,25 @@ public class LocationController {
                     In case when both params are specified, will be returned set of locations by region id.
                     
                     By default param page will be set with 1.
+                    
+                    Specify param name to get set of locations by name.
+                    This query will be executed only in case country and region id are not specified.
+                    Max size of set is 10.
                     """)
     @GetMapping
     public Set<LocationDto> getAllLocations(@RequestParam(required = false) String countryId,
                                             @RequestParam(required = false) String regionId,
+                                            @RequestParam(required = false) String name,
                                             @RequestParam(defaultValue = "1") int page) {
 
         if (regionId != null)
             return locationService.getLocationsByRegion(Long.valueOf(regionId), page);
 
-        if (countryId != null) {
+        if (countryId != null)
             return locationService.getLocationsByCountry(Long.valueOf(countryId), page);
-        }
+
+        if (name != null)
+            return locationService.getLocationsByName(name);
 
         return locationService.getAllLocations(page);
     }

@@ -21,13 +21,20 @@ public class RegionController {
                     You can specify country id as query param to get all regions for certain country.
                         
                     By default param page will be set with 1
+                    
+                    Specify param name to get set of region by name.
+                    Max size of set is 10.
                     """)
     @GetMapping
     public Set<RegionDto> getAllRegions(@RequestParam(required = false) String countryId,
+                                        @RequestParam(required = false) String name,
                                         @RequestParam(defaultValue = "1") int page) {
 
         if (countryId != null)
             return regionService.getRegionsByCountry(Long.valueOf(countryId), page);
+
+        if (name != null)
+            return regionService.getRegionsByName(name);
 
         return regionService.getAllRegions(page);
     }

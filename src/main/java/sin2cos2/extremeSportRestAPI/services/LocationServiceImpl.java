@@ -53,6 +53,14 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
+    public Set<LocationDto> getLocationsByName(String name) {
+        return locationRepository.getLocationsByName(name, PageRequest.of(0, 10))
+                .stream()
+                .map(locationMapper::locationToLocationDto)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
     public LocationDto getLocationDtoById(Long locationId) {
         Optional<Location> locationOptional = locationRepository.findById(locationId);
 

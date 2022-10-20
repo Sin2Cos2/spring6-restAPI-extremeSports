@@ -12,6 +12,8 @@ public interface LocationService {
 
     Set<LocationDto> getAllLocations(int page);
 
+    Set<LocationDto> getLocationsByName(String name);
+
     LocationDto getLocationDtoById(Long locationId);
 
     Location getLocationById(Long locationId);
