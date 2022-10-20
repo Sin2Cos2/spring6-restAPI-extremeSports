@@ -1,16 +1,18 @@
 package sin2cos2.extremeSportRestAPI.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import sin2cos2.extremeSportRestAPI.entities.Trip;
 
 import java.util.Set;
 
 public interface TripRepository extends JpaRepository<Trip, Long> {
-    Set<Trip> findAllByLocationId(Long locationId);
+    Page<Trip> findAllByLocationId(Long locationId, Pageable page);
 
-    Set<Trip> findAllBySportId(Long sportId);
+    Page<Trip> findAllBySportId(Long sportId, Pageable page);
 
-    Set<Trip> findAllByLocationIdAndSportId(Long locationId, Long sportId);
+    Page<Trip> findAllByLocationIdAndSportId(Long locationId, Long sportId, Pageable page);
 
     void deleteTripsByLocationIdAndSportId(Long locationId, Long sportId);
 

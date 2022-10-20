@@ -5,13 +5,13 @@ import sin2cos2.extremeSportRestAPI.api.v1.dtos.TripDto;
 import java.util.Set;
 
 public interface TripService {
-    Set<TripDto> getAllTrips();
+    Set<TripDto> getAllTrips(int page);
 
-    Set<TripDto> getAllTripsByLocationAndSport(Long locationId, Long sportId);
+    Set<TripDto> getAllTripsByLocationAndSport(Long locationId, Long sportId, int page);
 
-    Set<TripDto> getAllTripsByLocation(Long countryId);
+    Set<TripDto> getAllTripsByLocation(Long countryId, int page);
 
-    Set<TripDto> getAllTripsBySport(Long sportId);
+    Set<TripDto> getAllTripsBySport(Long sportId, int page);
 
     TripDto getTripById(Long tripId);
 

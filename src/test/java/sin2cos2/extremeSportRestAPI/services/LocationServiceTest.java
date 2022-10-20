@@ -3,6 +3,8 @@ package sin2cos2.extremeSportRestAPI.services;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.LocationDto;
 import sin2cos2.extremeSportRestAPI.entities.Location;
 import sin2cos2.extremeSportRestAPI.repositories.CountryRepository;
@@ -37,21 +39,21 @@ class LocationServiceTest extends ServiceTest{
 
     @Test
     void getLocationsByRegion() {
-        Set<LocationDto> locationDtoSet = locationService.getLocationsByRegion(1L);
+        Set<LocationDto> locationDtoSet = locationService.getLocationsByRegion(1L, 1);
 
         assertThat(locationDtoSet.size()).isEqualTo(2);
     }
 
     @Test
     void getLocationsByCountry() {
-        Set<LocationDto> locationDtoSet = locationService.getLocationsByCountry(3L);
+        Set<LocationDto> locationDtoSet = locationService.getLocationsByCountry(3L, 1);
 
         assertThat(locationDtoSet.size()).isEqualTo(3);
     }
 
     @Test
     void getAllLocations() {
-        Set<LocationDto> locationDtoSet = locationService.getAllLocations();
+        Set<LocationDto> locationDtoSet = locationService.getAllLocations(1);
 
         assertThat(locationDtoSet.size()).isEqualTo(7);
     }
@@ -109,23 +111,35 @@ class LocationServiceTest extends ServiceTest{
         locationService.deleteLocation(10L);
 
         assertThat(count).isGreaterThan(locationRepository.count());
-        assertThat(tripRepository.findAllByLocationId(10L).size()).isEqualTo(0);
+        assertThat(tripRepository.findAllByLocationId(10L, PageRequest.of(0, 10))
+                .getTotalElements())
+                .isEqualTo(0);
     }
 
     @Test
     void deleteLocationsByRegion() {
 
         locationService.deleteLocationsByRegion(2L);
-        assertThat(locationRepository.getLocationByRegionId(2L).size()).isEqualTo(0);
-        assertThat(tripRepository.findAllByLocationId(3L).size()).isEqualTo(0);
-        assertThat(tripRepository.findAllByLocationId(4L).size()).isEqualTo(0);
+        assertThat(locationRepository.getLocationByRegionId(2L, PageRequest.of(1, 10))
+                .getTotalElements())
+                .isEqualTo(0);
+        assertThat(tripRepository.findAllByLocationId(3L, PageRequest.of(0, 10))
+                .getTotalElements())
+                .isEqualTo(0);
+        assertThat(tripRepository.findAllByLocationId(4L, PageRequest.of(0, 10))
+                .getTotalElements())
+                .isEqualTo(0);
     }
 
     @Test
     void deleteLocationsByCountry() {
 
         locationService.deleteLocationsByCountry(3L);
-        assertThat(locationRepository.getLocationByCountryId(3L).size()).isEqualTo(0);
-        assertThat(tripRepository.findAllByLocationId(10L).size()).isEqualTo(0);
+        assertThat(locationRepository.getLocationByCountryId(3L, PageRequest.of(1, 10))
+                .getTotalElements())
+                .isEqualTo(0);
+        assertThat(tripRepository.findAllByLocationId(10L, PageRequest.of(0, 10))
+                .getTotalElements())
+                .isEqualTo(0);
     }
 }

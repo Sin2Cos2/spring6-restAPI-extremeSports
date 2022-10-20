@@ -3,6 +3,7 @@ package sin2cos2.extremeSportRestAPI.services;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.CountryDto;
 import sin2cos2.extremeSportRestAPI.entities.Country;
 import sin2cos2.extremeSportRestAPI.exceptions.NotFoundException;
@@ -109,7 +110,11 @@ class CountryServiceTest extends ServiceTest {
         countryService.deleteCountry(1L);
 
         assertThat(countryCount).isGreaterThan(countryRepository.count());
-        assertThat(regionRepository.findByCountryId(1L).size()).isEqualTo(0);
-        assertThat(locationRepository.getLocationByCountryId(1L).size()).isEqualTo(0);
+        assertThat(regionRepository.findByCountryId(1L, PageRequest.of(0,10))
+                .getTotalElements())
+                .isEqualTo(0);
+        assertThat(locationRepository.getLocationByCountryId(1L, PageRequest.of(0, 10))
+                .getTotalElements())
+                .isEqualTo(0);
     }
 }

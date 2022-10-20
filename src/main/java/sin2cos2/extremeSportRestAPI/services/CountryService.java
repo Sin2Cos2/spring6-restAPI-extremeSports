@@ -6,7 +6,7 @@ import sin2cos2.extremeSportRestAPI.entities.Country;
 import java.util.Set;
 
 public interface CountryService {
-    Set<CountryDto> getAllCountries();
+    Set<CountryDto> getAllCountries(int page);
 
     CountryDto getCountryDtoById(Long id);
 

@@ -1,6 +1,5 @@
 package sin2cos2.extremeSportRestAPI.api.v1.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -13,19 +12,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.RegionDto;
 import sin2cos2.extremeSportRestAPI.services.RegionService;
 
-import java.lang.reflect.Array;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -58,7 +53,7 @@ class RegionControllerTest {
         regionDtos.add(RegionDto.builder().build());
         regionDtos.add(RegionDto.builder().build());
 
-        when(regionService.getAllRegions()).thenReturn(regionDtos);
+        when(regionService.getAllRegions(anyInt())).thenReturn(regionDtos);
 
         mockMvc.perform(get(BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON))

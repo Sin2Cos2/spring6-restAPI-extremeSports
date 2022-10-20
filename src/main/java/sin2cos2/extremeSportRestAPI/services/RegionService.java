@@ -6,9 +6,9 @@ import sin2cos2.extremeSportRestAPI.entities.Region;
 import java.util.Set;
 
 public interface RegionService {
-    Set<RegionDto> getRegionsByCountry(Long countryId);
+    Set<RegionDto> getRegionsByCountry(Long countryId, int page);
 
-    Set<RegionDto> getAllRegions();
+    Set<RegionDto> getAllRegions(int page);
 
     Region getRegionById(Long id);
 

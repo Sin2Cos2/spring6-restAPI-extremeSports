@@ -1,6 +1,7 @@
 package sin2cos2.extremeSportRestAPI.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.RegionDto;
@@ -23,15 +24,15 @@ public class RegionServiceImpl implements RegionService {
     private final RegionMapper regionMapper = RegionMapper.INSTANCE;
 
     @Override
-    public Set<RegionDto> getRegionsByCountry(Long countryId) {
-        return regionRepository.findByCountryId(countryId)
+    public Set<RegionDto> getRegionsByCountry(Long countryId, int page) {
+        return regionRepository.findByCountryId(countryId, PageRequest.of(page - 1, 10))
                 .stream()
                 .map(regionMapper::regionToRegionDto)
                 .collect(Collectors.toSet());
     }
 
     @Override
-    public Set<RegionDto> getAllRegions() {
+    public Set<RegionDto> getAllRegions(int page) {
         return regionRepository
                 .findAll()
                 .stream()

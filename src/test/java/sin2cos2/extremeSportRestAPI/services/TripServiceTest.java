@@ -3,6 +3,7 @@ package sin2cos2.extremeSportRestAPI.services;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.TripDto;
 import sin2cos2.extremeSportRestAPI.repositories.*;
 
@@ -40,25 +41,25 @@ class TripServiceTest extends ServiceTest {
     @Test
     void getAllTrips() {
 
-        assertThat(tripService.getAllTrips().size()).isEqualTo(5);
+        assertThat(tripService.getAllTrips(1).size()).isEqualTo(5);
     }
 
     @Test
     void getAllTripsByLocationAndSport() {
 
-        assertThat(tripService.getAllTripsByLocationAndSport(1L, 2L).size()).isEqualTo(1);
+        assertThat(tripService.getAllTripsByLocationAndSport(1L, 2L, 1).size()).isEqualTo(1);
     }
 
     @Test
     void getAllTripsByLocation() {
 
-        assertThat(tripService.getAllTripsByLocation(10L).size()).isEqualTo(2);
+        assertThat(tripService.getAllTripsByLocation(10L, 1).size()).isEqualTo(2);
     }
 
     @Test
     void getAllTripsBySport() {
 
-        assertThat(tripService.getAllTripsBySport(2L).size()).isEqualTo(3);
+        assertThat(tripService.getAllTripsBySport(2L, 1).size()).isEqualTo(3);
     }
 
     @Test
@@ -149,7 +150,9 @@ class TripServiceTest extends ServiceTest {
 
         tripService.deleteTripsByLocationAndSport(1L, 2L);
 
-        assertThat(tripRepository.findAllByLocationIdAndSportId(1L, 2L).size()).isEqualTo(0);
+        assertThat(tripRepository.findAllByLocationIdAndSportId(1L, 2L, PageRequest.of(0, 10))
+                .getTotalElements())
+                .isEqualTo(0);
         assertThat(count).isGreaterThan(tripRepository.count());
     }
 
@@ -159,7 +162,9 @@ class TripServiceTest extends ServiceTest {
 
         tripService.deleteTripsByLocation(1L);
 
-        assertThat(tripRepository.findAllByLocationId(1L).size()).isEqualTo(0);
+        assertThat(tripRepository.findAllByLocationId(1L, PageRequest.of(0, 10))
+                .getTotalElements())
+                .isEqualTo(0);
         assertThat(count).isGreaterThan(tripRepository.count());
     }
 
@@ -169,7 +174,9 @@ class TripServiceTest extends ServiceTest {
 
         tripService.deleteTripsBySport(2L);
 
-        assertThat(tripRepository.findAllBySportId(2L).size()).isEqualTo(0);
+        assertThat(tripRepository.findAllBySportId(2L, PageRequest.of(0, 10))
+                .getTotalElements())
+                .isEqualTo(0);
         assertThat(count).isGreaterThan(tripRepository.count());
     }
 }

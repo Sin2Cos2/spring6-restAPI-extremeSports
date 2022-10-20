@@ -16,10 +16,10 @@ public class SportController {
 
     private final SportService sportService;
 
-    @Operation(summary = "Get all sports")
+    @Operation(summary = "Get all sports", description = "By default param page will be set with 1")
     @GetMapping
-    public Set<SportDto> getAllSports() {
-        return sportService.getAllSports();
+    public Set<SportDto> getAllSports(@RequestParam(defaultValue = "1") int page) {
+        return sportService.getAllSports(page);
     }
 
     @Operation(summary = "Get sport by id")

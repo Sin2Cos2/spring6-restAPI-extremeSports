@@ -1,10 +1,8 @@
 package sin2cos2.extremeSportRestAPI.api.v1.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import netscape.javascript.JSObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,8 +12,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.LocationDto;
 import sin2cos2.extremeSportRestAPI.services.LocationService;
 
@@ -24,9 +20,7 @@ import java.util.Set;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -58,7 +52,7 @@ class LocationControllerTest {
         locationDtoSet.add(new LocationDto());
         locationDtoSet.add(new LocationDto());
 
-        when(locationService.getAllLocations()).thenReturn(locationDtoSet);
+        when(locationService.getAllLocations(anyInt())).thenReturn(locationDtoSet);
 
         mockMvc.perform(get(BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -72,7 +66,7 @@ class LocationControllerTest {
         locationDtoSet.add(new LocationDto());
         locationDtoSet.add(new LocationDto());
 
-        when(locationService.getLocationsByRegion(anyLong())).thenReturn(locationDtoSet);
+        when(locationService.getLocationsByRegion(anyLong(), anyInt())).thenReturn(locationDtoSet);
 
         mockMvc.perform(get(BASE_URL + "?regionId=2")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -86,7 +80,7 @@ class LocationControllerTest {
         locationDtoSet.add(new LocationDto());
         locationDtoSet.add(new LocationDto());
 
-        when(locationService.getLocationsByCountry(anyLong())).thenReturn(locationDtoSet);
+        when(locationService.getLocationsByCountry(anyLong(), anyInt())).thenReturn(locationDtoSet);
 
         mockMvc.perform(get(BASE_URL + "?countryId=2")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -105,8 +99,8 @@ class LocationControllerTest {
         locationDtoSet2.add(new LocationDto());
         locationDtoSet2.add(new LocationDto());
 
-        when(locationService.getLocationsByCountry(anyLong())).thenReturn(locationDtoSet1);
-        when(locationService.getLocationsByRegion(anyLong())).thenReturn(locationDtoSet2);
+        when(locationService.getLocationsByCountry(anyLong(), anyInt())).thenReturn(locationDtoSet1);
+        when(locationService.getLocationsByRegion(anyLong(), anyInt())).thenReturn(locationDtoSet2);
 
         mockMvc.perform(get(BASE_URL + "?countryId=2&regionId=6")
                         .contentType(MediaType.APPLICATION_JSON))

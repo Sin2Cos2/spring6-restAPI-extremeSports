@@ -6,7 +6,7 @@ import sin2cos2.extremeSportRestAPI.entities.Sport;
 import java.util.Set;
 
 public interface SportService {
-    Set<SportDto> getAllSports();
+    Set<SportDto> getAllSports(int page);
 
     SportDto getSportDtoById(Long sportId);
 

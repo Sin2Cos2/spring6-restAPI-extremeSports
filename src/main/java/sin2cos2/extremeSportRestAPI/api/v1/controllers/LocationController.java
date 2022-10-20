@@ -23,19 +23,22 @@ public class LocationController {
                     Specify region id as query param to get all locations of certain region.
                                 
                     In case when both params are specified, will be returned set of locations by region id.
+                    
+                    By default param page will be set with 1.
                     """)
     @GetMapping
     public Set<LocationDto> getAllLocations(@RequestParam(required = false) String countryId,
-                                            @RequestParam(required = false) String regionId) {
+                                            @RequestParam(required = false) String regionId,
+                                            @RequestParam(defaultValue = "1") int page) {
 
         if (regionId != null)
-            return locationService.getLocationsByRegion(Long.valueOf(regionId));
+            return locationService.getLocationsByRegion(Long.valueOf(regionId), page);
 
         if (countryId != null) {
-            return locationService.getLocationsByCountry(Long.valueOf(countryId));
+            return locationService.getLocationsByCountry(Long.valueOf(countryId), page);
         }
 
-        return locationService.getAllLocations();
+        return locationService.getAllLocations(page);
     }
 
     @Operation(summary = "Get location by id")

@@ -1,6 +1,7 @@
 package sin2cos2.extremeSportRestAPI.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.SportDto;
 import sin2cos2.extremeSportRestAPI.api.v1.mappers.SportMapper;
@@ -20,9 +21,9 @@ public class SportServiceImpl implements SportService {
     private final SportMapper sportMapper = SportMapper.INSTANCE;
 
     @Override
-    public Set<SportDto> getAllSports() {
+    public Set<SportDto> getAllSports(int page) {
         return sportRepository
-                .findAll()
+                .findAll(PageRequest.of(page - 1, 10))
                 .stream()
                 .map(sportMapper::sportToSportDto)
                 .collect(Collectors.toSet());

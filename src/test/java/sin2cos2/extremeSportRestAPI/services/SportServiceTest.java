@@ -3,6 +3,7 @@ package sin2cos2.extremeSportRestAPI.services;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.SportDto;
 import sin2cos2.extremeSportRestAPI.entities.Sport;
 import sin2cos2.extremeSportRestAPI.repositories.SportRepository;
@@ -25,7 +26,7 @@ class SportServiceTest extends ServiceTest {
     @Test
     void getAllSports() {
 
-        assertThat(sportService.getAllSports().size()).isEqualTo(3);
+        assertThat(sportService.getAllSports(1).size()).isEqualTo(3);
     }
 
     @Test

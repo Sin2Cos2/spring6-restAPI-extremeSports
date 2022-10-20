@@ -22,8 +22,7 @@ import java.util.Set;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -64,7 +63,7 @@ class TripControllerTest {
         tripDtoSet.add(new TripDto());
         tripDtoSet.add(new TripDto());
 
-        when(tripService.getAllTrips()).thenReturn(tripDtoSet);
+        when(tripService.getAllTrips(anyInt())).thenReturn(tripDtoSet);
 
         mockMvc.perform(get(BASE_URL))
                 .andExpect(status().isOk())
@@ -77,7 +76,7 @@ class TripControllerTest {
         tripDtoSet.add(new TripDto());
         tripDtoSet.add(new TripDto());
 
-        when(tripService.getAllTripsByLocation(anyLong())).thenReturn(tripDtoSet);
+        when(tripService.getAllTripsByLocation(anyLong(), anyInt())).thenReturn(tripDtoSet);
 
         mockMvc.perform(get(BASE_URL + "?locationId=3"))
                 .andExpect(status().isOk())
@@ -90,7 +89,7 @@ class TripControllerTest {
         tripDtoSet.add(new TripDto());
         tripDtoSet.add(new TripDto());
 
-        when(tripService.getAllTripsBySport(anyLong())).thenReturn(tripDtoSet);
+        when(tripService.getAllTripsBySport(anyLong(), anyInt())).thenReturn(tripDtoSet);
 
         mockMvc.perform(get(BASE_URL + "?sportId=3"))
                 .andExpect(status().isOk())
@@ -104,7 +103,7 @@ class TripControllerTest {
         tripDtoSet.add(new TripDto());
         tripDtoSet.add(new TripDto());
 
-        when(tripService.getAllTripsByLocationAndSport(anyLong(), anyLong())).thenReturn(tripDtoSet);
+        when(tripService.getAllTripsByLocationAndSport(anyLong(), anyLong(), anyInt())).thenReturn(tripDtoSet);
 
         mockMvc.perform(get(BASE_URL + "?locationId=3&sportId=2"))
                 .andExpect(status().isOk())

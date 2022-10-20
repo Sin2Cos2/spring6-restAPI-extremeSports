@@ -1,6 +1,7 @@
 package sin2cos2.extremeSportRestAPI.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.TripDto;
@@ -25,36 +26,36 @@ public class TripServiceImpl implements TripService {
     private final TripMapper tripMapper = TripMapper.INSTANCE;
 
     @Override
-    public Set<TripDto> getAllTrips() {
+    public Set<TripDto> getAllTrips(int page) {
         return tripRepository
-                .findAll()
+                .findAll(PageRequest.of(page - 1, 10))
                 .stream()
                 .map(tripMapper::tripToTripDto)
                 .collect(Collectors.toSet());
     }
 
     @Override
-    public Set<TripDto> getAllTripsByLocationAndSport(Long locationId, Long sportId) {
+    public Set<TripDto> getAllTripsByLocationAndSport(Long locationId, Long sportId, int page) {
         return tripRepository
-                .findAllByLocationIdAndSportId(locationId, sportId)
+                .findAllByLocationIdAndSportId(locationId, sportId, PageRequest.of(page - 1, 10))
                 .stream()
                 .map(tripMapper::tripToTripDto)
                 .collect(Collectors.toSet());
     }
 
     @Override
-    public Set<TripDto> getAllTripsByLocation(Long locationId) {
+    public Set<TripDto> getAllTripsByLocation(Long locationId, int page) {
         return tripRepository
-                .findAllByLocationId(locationId)
+                .findAllByLocationId(locationId, PageRequest.of(page - 1, 10))
                 .stream()
                 .map(tripMapper::tripToTripDto)
                 .collect(Collectors.toSet());
     }
 
     @Override
-    public Set<TripDto> getAllTripsBySport(Long sportId) {
+    public Set<TripDto> getAllTripsBySport(Long sportId, int page) {
         return tripRepository
-                .findAllBySportId(sportId)
+                .findAllBySportId(sportId, PageRequest.of(page - 1, 10))
                 .stream()
                 .map(tripMapper::tripToTripDto)
                 .collect(Collectors.toSet());

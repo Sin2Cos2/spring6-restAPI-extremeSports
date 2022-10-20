@@ -1,6 +1,7 @@
 package sin2cos2.extremeSportRestAPI.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.CountryDto;
 import sin2cos2.extremeSportRestAPI.api.v1.mappers.CountryMapper;
@@ -8,6 +9,7 @@ import sin2cos2.extremeSportRestAPI.entities.Country;
 import sin2cos2.extremeSportRestAPI.exceptions.NotFoundException;
 import sin2cos2.extremeSportRestAPI.repositories.CountryRepository;
 
+import java.awt.print.Pageable;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,9 +22,9 @@ public class CountryServiceImpl implements CountryService {
     private final CountryMapper countryMapper = CountryMapper.INSTANCE;
 
     @Override
-    public Set<CountryDto> getAllCountries() {
+    public Set<CountryDto> getAllCountries(int page) {
         return countryRepository
-                .findAll()
+                .findAll(PageRequest.of(page - 1, 10))
                 .stream()
                 .map(countryMapper::countryToCountryDto)
                 .collect(Collectors.toSet());

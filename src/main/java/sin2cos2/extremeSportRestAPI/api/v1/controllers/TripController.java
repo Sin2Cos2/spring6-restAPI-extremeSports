@@ -23,22 +23,25 @@ public class TripController {
                     Specify trip id as query param to get all trips of certain sport.
                                         
                     In case when both params are specified, will be returned set of common trips.
+                    
+                    By default param page will be set with 1.
                     """)
     @GetMapping
     public Set<TripDto> getAllTrips(@RequestParam(required = false) String locationId,
-                                    @RequestParam(required = false) String sportId) {
+                                    @RequestParam(required = false) String sportId,
+                                    @RequestParam(defaultValue = "1") int page) {
 
         if (locationId != null && sportId != null) {
-            return tripService.getAllTripsByLocationAndSport(Long.valueOf(locationId), Long.valueOf(sportId));
+            return tripService.getAllTripsByLocationAndSport(Long.valueOf(locationId), Long.valueOf(sportId), page);
         }
         if (locationId != null) {
-            return tripService.getAllTripsByLocation(Long.valueOf(locationId));
+            return tripService.getAllTripsByLocation(Long.valueOf(locationId), page);
         }
         if (sportId != null) {
-            return tripService.getAllTripsBySport(Long.valueOf(sportId));
+            return tripService.getAllTripsBySport(Long.valueOf(sportId), page);
         }
 
-        return tripService.getAllTrips();
+        return tripService.getAllTrips(page);
     }
 
     @Operation(summary = "Get trip by id")

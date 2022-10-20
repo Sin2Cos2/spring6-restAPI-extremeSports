@@ -3,6 +3,7 @@
 # Description
 REST API for managing a service for a site that will help you find extreme adventure trips where you can spend holidays.
 All available endpoints are listed below. If a particular endpoint can accept query params, they will be found below, along with the data type they accept. 
+A query param is required if it ends with *.
 A more extensive description of each endpoint is available at /swagger-ui/index.html
 
 ---
@@ -11,12 +12,15 @@ A more extensive description of each endpoint is available at /swagger-ui/index.
 
 ### GET request
 
-- /api/v1/countries                                     
+- /api/v1/countries
+    > page=number
 - /api/v1/countries/{countryId}                         
 - /api/v1/countries/{countryName}   - To implement                    
 
 - /api/v1/regions
     > countryId=number
+    >
+    > page=number
 - /api/v1/regions/{regionId}                            
 - /api/v1/regions/{regionName}      - To implement                      
 
@@ -24,11 +28,17 @@ A more extensive description of each endpoint is available at /swagger-ui/index.
     > countryId=number
     >
     > regionId=number
+    >
+    > page=number
 - /api/v1/locations/{locationId}                        
-- /api/v1/locations/{locationName}  - To implement                      
+- /api/v1/locations/{locationName}  - To implement 
+
+- /api/v1/sports
+    > page=number
+- /api/v1/sports/{sportId}
+- /api/v1/sports/{sportName}         - To implement
 
 - /api/v1/trips
-
     > startDate=yyyy-mm-dd           - To implement
     >
     > endDate=yyyy-mm-dd             - To implement
@@ -36,6 +46,8 @@ A more extensive description of each endpoint is available at /swagger-ui/index.
     > locationId=number
     >
     > sportId=number
+    >
+    > page=number
 
 - /api/v1/trips/{tripId}
 
@@ -71,19 +83,19 @@ A more extensive description of each endpoint is available at /swagger-ui/index.
 - /api/v1/countries
 
 - /api/v1/regions
-    > countryId=number
+    > countryId=number*
 
 - /api/v1/locations
-    > countryId=number
+    > countryId=number*
     >
-    > regionId=number
+    > regionId=number*
 
 - /api/v1/sports
 
 - /api/v1/trips
-    > sportId=number
+    > sportId=number*
     >
-    > locationId=number
+    > locationId=number*
 
 ### PUT request
 

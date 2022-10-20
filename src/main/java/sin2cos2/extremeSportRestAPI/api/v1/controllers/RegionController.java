@@ -17,14 +17,19 @@ public class RegionController {
     private final RegionService regionService;
 
     @Operation(summary = "Get all regions",
-    description = "You can specify country id as query param to get all regions for certain country")
+            description = """
+                    You can specify country id as query param to get all regions for certain country.
+                        
+                    By default param page will be set with 1
+                    """)
     @GetMapping
-    public Set<RegionDto> getAllRegions(@RequestParam(required = false) String countryId) {
+    public Set<RegionDto> getAllRegions(@RequestParam(required = false) String countryId,
+                                        @RequestParam(defaultValue = "1") int page) {
 
         if (countryId != null)
-            return regionService.getRegionsByCountry(Long.valueOf(countryId));
+            return regionService.getRegionsByCountry(Long.valueOf(countryId), page);
 
-        return regionService.getAllRegions();
+        return regionService.getAllRegions(page);
     }
 
     @Operation(summary = "Get region by id")
@@ -49,7 +54,7 @@ public class RegionController {
     }
 
     @Operation(summary = "Delete region by country id",
-    description = "Specify country id as query param if you want to delete all regions for certain country")
+            description = "Specify country id as query param if you want to delete all regions for certain country")
     @DeleteMapping
     public void deleteRegions(@RequestParam(required = false) String countryId) {
 

@@ -18,10 +18,10 @@ public class CountryController {
 
     private final CountryService countryService;
 
-    @Operation(summary = "Get all countries")
+    @Operation(summary = "Get all countries", description = "By default param page will be set with 1")
     @GetMapping
-    public Set<CountryDto> getAllCountries() {
-        return countryService.getAllCountries();
+    public Set<CountryDto> getAllCountries(@RequestParam(defaultValue = "1") int page) {
+        return countryService.getAllCountries(page);
     }
 
     @Operation(summary = "Get country by id")

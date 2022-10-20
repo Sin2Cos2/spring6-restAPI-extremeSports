@@ -49,11 +49,12 @@ class CountryControllerTest {
     @Test
     void getAllCountries() throws Exception {
 
+        int page = 1;
         Set<CountryDto> countryDtos = new LinkedHashSet<>();
         countryDtos.add(CountryDto.builder().build());
         countryDtos.add(CountryDto.builder().build());
 
-        when(countryService.getAllCountries()).thenReturn(countryDtos);
+        when(countryService.getAllCountries(page)).thenReturn(countryDtos);
 
         mockMvc.perform(get(BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON))

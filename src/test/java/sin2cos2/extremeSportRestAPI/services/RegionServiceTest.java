@@ -3,6 +3,7 @@ package sin2cos2.extremeSportRestAPI.services;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.RegionDto;
 import sin2cos2.extremeSportRestAPI.entities.Region;
 import sin2cos2.extremeSportRestAPI.repositories.CountryRepository;
@@ -33,14 +34,14 @@ class RegionServiceTest extends ServiceTest {
 
     @Test
     void getRegionsByCountry() {
-        Set<RegionDto> regionDtoSet = regionService.getRegionsByCountry(1L);
+        Set<RegionDto> regionDtoSet = regionService.getRegionsByCountry(1L, 1);
 
         assertThat(regionDtoSet.size()).isEqualTo(1);
     }
 
     @Test
     void getAllRegions() {
-        Set<RegionDto> regionDtoSet = regionService.getAllRegions();
+        Set<RegionDto> regionDtoSet = regionService.getAllRegions(1);
 
         assertThat(regionDtoSet.size()).isEqualTo(4);
     }
@@ -96,13 +97,17 @@ class RegionServiceTest extends ServiceTest {
         regionService.deleteRegion(1L);
 
         assertThat(regionRepository.count()).isLessThan(regionCount);
-        assertThat(locationRepository.getLocationByRegionId(1L).size()).isEqualTo(0);
+        assertThat(locationRepository.getLocationByRegionId(1L, PageRequest.of(0, 10))
+                .getTotalElements())
+                .isEqualTo(0);
     }
 
     @Test
     void deleteAllRegionsByCountry() {
         regionService.deleteAllRegionsByCountry(3L);
 
-        assertThat(regionRepository.findByCountryId(3L).size()).isEqualTo(0);
+        assertThat(regionRepository.findByCountryId(3L, PageRequest.of(0, 10))
+                .getTotalElements())
+                .isEqualTo(0);
     }
 }
