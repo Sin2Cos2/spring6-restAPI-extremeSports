@@ -2,11 +2,13 @@ package sin2cos2.extremeSportRestAPI.api.v1.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.TripDto;
 import sin2cos2.extremeSportRestAPI.services.TripService;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @RequiredArgsConstructor
@@ -18,30 +20,25 @@ public class TripController {
 
     @Operation(summary = "Get all trips",
             description = """
-                    Specify location id as query param to get all trips of certain location.
+                    Specify any of query params: locationId, sportId, startDate and endDate
+                    to enable filter according to the given parameters.
+                    Any combinations are permitted.
                                         
-                    Specify trip id as query param to get all trips of certain sport.
-                                        
-                    In case when both params are specified, will be returned set of common trips.
-                    
                     By default param page will be set with 1.
                     """)
     @GetMapping
     public Set<TripDto> getAllTrips(@RequestParam(required = false) String locationId,
                                     @RequestParam(required = false) String sportId,
-                                    @RequestParam(defaultValue = "1") int page) {
+                                    @RequestParam(required = false)
+                                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                    @RequestParam(required = false)
+                                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+                                    @RequestParam(defaultValue = "1") Integer page) {
 
-        if (locationId != null && sportId != null) {
-            return tripService.getAllTripsByLocationAndSport(Long.valueOf(locationId), Long.valueOf(sportId), page);
-        }
-        if (locationId != null) {
-            return tripService.getAllTripsByLocation(Long.valueOf(locationId), page);
-        }
-        if (sportId != null) {
-            return tripService.getAllTripsBySport(Long.valueOf(sportId), page);
-        }
+        Long locationIdLong = locationId == null ? null : Long.valueOf(locationId);
+        Long sportIdLong = sportId == null ? null : Long.valueOf(sportId);
 
-        return tripService.getAllTrips(page);
+        return tripService.getAllTrips(locationIdLong, sportIdLong, startDate, endDate, page);
     }
 
     @Operation(summary = "Get trip by id")
@@ -81,23 +78,22 @@ public class TripController {
 
     @Operation(summary = "Delete trips with criteria",
             description = """
-                    Specify location id as query param to delete all trips of certain location.
-                                        
-                    Specify sport id as query param to delete all trips of certain sport.
-                                        
-                    In case when both params are specified, common trips will be deleted.
+                    Specify any of query params: locationId, sportId, startDate and endDate
+                    to enable filter according to the given parameters.
+                    Any combinations are permitted.
                     """)
     @DeleteMapping
     public void deleteTrips(@RequestParam(required = false) String locationId,
-                            @RequestParam(required = false) String sportId) {
+                            @RequestParam(required = false) String sportId,
+                            @RequestParam(required = false)
+                            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                            @RequestParam(required = false)
+                            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 
-        if (locationId != null && sportId != null) {
-            tripService.deleteTripsByLocationAndSport(Long.valueOf(locationId), Long.valueOf(sportId));
-        } else if (locationId != null) {
-            tripService.deleteTripsByLocation(Long.valueOf(locationId));
-        } else if (sportId != null) {
-            tripService.deleteTripsBySport(Long.valueOf(sportId));
-        }
+        Long locationIdLong = locationId == null ? null : Long.valueOf(locationId);
+        Long sportIdLong = sportId == null ? null : Long.valueOf(sportId);
+
+        tripService.deleteAllTripsByParams(locationIdLong, sportIdLong, startDate, endDate);
     }
 
     @Operation(summary = "Delete trip by id")

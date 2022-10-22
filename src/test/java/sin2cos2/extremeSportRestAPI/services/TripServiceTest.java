@@ -41,25 +41,29 @@ class TripServiceTest extends ServiceTest {
     @Test
     void getAllTrips() {
 
-        assertThat(tripService.getAllTrips(1).size()).isEqualTo(5);
+        assertThat(tripService.getAllTrips(null, null, null, null, 1)
+                .size()).isEqualTo(5);
     }
 
     @Test
     void getAllTripsByLocationAndSport() {
 
-        assertThat(tripService.getAllTripsByLocationAndSport(1L, 2L, 1).size()).isEqualTo(1);
+        assertThat(tripService.getAllTrips(1L, 2L, null, null,1)
+                .size()).isEqualTo(1);
     }
 
     @Test
     void getAllTripsByLocation() {
 
-        assertThat(tripService.getAllTripsByLocation(10L, 1).size()).isEqualTo(2);
+        assertThat(tripService.getAllTrips(10L, null, null, null, 1)
+                .size()).isEqualTo(2);
     }
 
     @Test
     void getAllTripsBySport() {
 
-        assertThat(tripService.getAllTripsBySport(2L, 1).size()).isEqualTo(3);
+        assertThat(tripService.getAllTrips(null, 2L, null, null, 1)
+                .size()).isEqualTo(3);
     }
 
     @Test
@@ -148,7 +152,7 @@ class TripServiceTest extends ServiceTest {
     void deleteTripsByLocationAndSport() {
         long count = tripRepository.count();
 
-        tripService.deleteTripsByLocationAndSport(1L, 2L);
+        tripService.deleteAllTripsByParams(1L, 2L, null, null);
 
         assertThat(tripRepository.findAllByLocationIdAndSportId(1L, 2L, PageRequest.of(0, 10))
                 .getTotalElements())
@@ -160,7 +164,7 @@ class TripServiceTest extends ServiceTest {
     void deleteTripsByLocation() {
         long count = tripRepository.count();
 
-        tripService.deleteTripsByLocation(1L);
+        tripService.deleteAllTripsByParams(1L, null, null, null);
 
         assertThat(tripRepository.findAllByLocationId(1L, PageRequest.of(0, 10))
                 .getTotalElements())
@@ -172,11 +176,19 @@ class TripServiceTest extends ServiceTest {
     void deleteTripsBySport() {
         long count = tripRepository.count();
 
-        tripService.deleteTripsBySport(2L);
+        tripService.deleteAllTripsByParams(null, 2L, null, null);
 
         assertThat(tripRepository.findAllBySportId(2L, PageRequest.of(0, 10))
                 .getTotalElements())
                 .isEqualTo(0);
         assertThat(count).isGreaterThan(tripRepository.count());
+    }
+
+    @Test
+    void deleteNoTrips() {
+        long count = tripRepository.count();
+
+        tripService.deleteAllTripsByParams(null, null, null, null);
+        assertThat(count).isEqualTo(tripRepository.count());
     }
 }
