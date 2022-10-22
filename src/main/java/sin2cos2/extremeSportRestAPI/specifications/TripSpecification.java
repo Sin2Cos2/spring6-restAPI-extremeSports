@@ -15,6 +15,25 @@ public class TripSpecification implements Specification<Trip> {
         list = new ArrayList<>();
     }
 
+    private static Expression<String> getStringExpression(Root<Trip> root, SearchCriteria criteria) {
+        String[] paths;
+        Expression<String> key;
+        Path<String> tempKey;
+
+        if (criteria.getKey().contains(".")) {
+            paths = criteria.getKey().split("\\.");
+
+            tempKey = root.get(paths[0]);
+            for (int i = 1; i < paths.length; i++)
+                tempKey = tempKey.get(paths[i]);
+
+            key = tempKey;
+        } else {
+            key = root.get(criteria.getKey());
+        }
+        return key;
+    }
+
     public void add(SearchCriteria criteria) {
         list.add(criteria);
     }
@@ -51,18 +70,5 @@ public class TripSpecification implements Specification<Trip> {
         }
 
         return builder.and(predicates.toArray(new Predicate[0]));
-    }
-
-    private static Expression<String> getStringExpression(Root<Trip> root, SearchCriteria criteria) {
-        String[] paths;
-        Expression<String> key;
-        if (criteria.getKey().contains(".")) {
-            paths = criteria.getKey().split("\\.");
-
-            key = root.get(paths[0]).get(paths[1]);
-        } else {
-            key = root.get(criteria.getKey());
-        }
-        return key;
     }
 }

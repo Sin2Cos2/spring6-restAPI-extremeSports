@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.TripDto;
+import sin2cos2.extremeSportRestAPI.entities.Trip;
 import sin2cos2.extremeSportRestAPI.services.TripService;
 
 import java.math.BigDecimal;
@@ -22,6 +23,7 @@ import java.util.Set;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -111,6 +113,92 @@ class TripControllerTest {
         mockMvc.perform(get(BASE_URL + "?locationId=3&sportId=2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)));
+    }
+
+    @Test
+    void getAllTripsByStartDate() throws Exception {
+        Set<TripDto> tripDtoSet = new HashSet<>();
+        tripDtoSet.add(TripDto.builder().build());
+        tripDtoSet.add(TripDto.builder().build());
+
+        when(tripService.getAllTrips(isNull(), isNull(), any(), isNull(), anyInt()))
+                .thenReturn(tripDtoSet);
+
+        mockMvc.perform(get(BASE_URL + "?startDate=2022-06-08"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @Test
+    void getAllTripsByEndDate() throws Exception {
+        Set<TripDto> tripDtoSet = new HashSet<>();
+        tripDtoSet.add(TripDto.builder().build());
+        tripDtoSet.add(TripDto.builder().build());
+        tripDtoSet.add(TripDto.builder().build());
+
+        when(tripService.getAllTrips(isNull(), isNull(), isNull(), any(), anyInt()))
+                .thenReturn(tripDtoSet);
+
+        mockMvc.perform(get(BASE_URL + "?endDate=2020-05-03"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)));
+    }
+
+    @Test
+    void getAllTripsAllParams() throws Exception {
+        Set<TripDto> tripDtoSet = new HashSet<>();
+        tripDtoSet.add(TripDto.builder().build());
+        tripDtoSet.add(TripDto.builder().build());
+        tripDtoSet.add(TripDto.builder().build());
+
+        when(tripService.getAllTrips(anyLong(), anyLong(), any(), any(), anyInt()))
+                .thenReturn(tripDtoSet);
+
+        mockMvc.perform(get(BASE_URL + "?locationId=1&sportId=2&startDate=2020-12-23&endDate=2021-01-15"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)));
+    }
+
+    @Test
+    void getAllTripsLocationSportStartDate() throws Exception {
+        Set<TripDto> tripDtoSet = new HashSet<>();
+        tripDtoSet.add(TripDto.builder().build());
+        tripDtoSet.add(TripDto.builder().build());
+
+        when(tripService.getAllTrips(anyLong(), anyLong(), any(), isNull(), anyInt()))
+                .thenReturn(tripDtoSet);
+
+        mockMvc.perform(get(BASE_URL + "?locationId=1&sportId=3&startDate=2019-02-10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @Test
+    void getAllTripsLocationSportEndDate() throws Exception {
+        Set<TripDto> tripDtoSet = new HashSet<>();
+        tripDtoSet.add(TripDto.builder().build());
+        tripDtoSet.add(TripDto.builder().build());
+
+        when(tripService.getAllTrips(anyLong(), anyLong(), isNull(), any(), anyInt()))
+                .thenReturn(tripDtoSet);
+
+        mockMvc.perform(get(BASE_URL + "?locationId=1&sportId=3&endDate=2019-02-10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @Test
+    void getAllTripsStartAndEndDate() throws Exception {
+        Set<TripDto> tripDtoSet = new HashSet<>();
+        tripDtoSet.add(TripDto.builder().build());
+        tripDtoSet.add(TripDto.builder().build());
+
+        when(tripService.getAllTrips(isNull(), isNull(), any(), any(), anyInt()))
+                .thenReturn(tripDtoSet);
+
+        mockMvc.perform(get(BASE_URL + "?startDate=2022-10-12&endDate=2022-12-12"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
     }
 
     @Test
