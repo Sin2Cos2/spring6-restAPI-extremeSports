@@ -13,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.TripDto;
-import sin2cos2.extremeSportRestAPI.entities.Trip;
 import sin2cos2.extremeSportRestAPI.services.TripService;
 
 import java.math.BigDecimal;
@@ -21,9 +20,9 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -258,9 +257,64 @@ class TripControllerTest {
     }
 
     @Test
-    void deleteTrips() throws Exception {
+    void deleteTripsBySport() throws Exception {
+
+        mockMvc.perform(delete(BASE_URL + "?sportId=3"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteTripsByLocation() throws Exception {
+
+        mockMvc.perform(delete(BASE_URL + "?locationId=2"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteTripsByStartDate() throws Exception {
+
+        mockMvc.perform(delete(BASE_URL + "?statDate=2020-10-12"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteTripsByEndDate() throws Exception {
+
+        mockMvc.perform(delete(BASE_URL + "?endDate=2021-05-12"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteTripsNoParam() throws Exception {
+        mockMvc.perform(delete(BASE_URL))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteTripsByLocationAndSportAndStartDate() throws Exception {
+
+        mockMvc.perform(delete(BASE_URL + "?locationId=2&sportId=4&startDate=2019-01-30"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteTripsByLocationAndSportAndEndDate() throws Exception {
+
+        mockMvc.perform(delete(BASE_URL + "?locationId=2&sportId=4&endDate=2019-01-30"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteTripsBySportAndLocation() throws Exception {
 
         mockMvc.perform(delete(BASE_URL + "?sportId=3&locationId=44"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteTripsAllParams() throws Exception {
+
+        mockMvc.perform(delete(BASE_URL + "?locationId=1&sportId=2&startDate=2020-12-23&endDate=2021-01-15"))
                 .andExpect(status().isOk());
     }
 
