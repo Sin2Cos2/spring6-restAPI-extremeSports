@@ -70,6 +70,76 @@ class TripServiceTest extends ServiceTest {
     }
 
     @Test
+    void getAllTripsByStartDate() {
+        LocalDate starDate = LocalDate.parse("2020-01-02");
+
+        assertThat(tripService.getAllTrips(null, null, starDate, null, 1)
+                .size()).isEqualTo(4);
+    }
+    @Test
+    void getAllTripsByStartDateNoResult () {
+        LocalDate starDate = LocalDate.parse("2022-01-02");
+
+        assertThat(tripService.getAllTrips(null, null, starDate, null, 1)
+                .size()).isEqualTo(0);
+    }
+
+    @Test
+    void getAllTripsByEndDate() {
+        LocalDate endDate = LocalDate.parse("2020-02-12");
+
+        assertThat(tripService.getAllTrips(null, null, null, endDate, 1)
+                .size()).isEqualTo(2);
+    }
+    @Test
+    void getAllTripsByEndDateNoResult() {
+        LocalDate endDate = LocalDate.parse("2019-02-12");
+
+        assertThat(tripService.getAllTrips(null, null, null, endDate, 1)
+                .size()).isEqualTo(0);
+    }
+
+    @Test
+    void getAllTripsByLocationAndSportAndStartDate() {
+        LocalDate startDate = LocalDate.parse("2020-12-17");
+
+        assertThat(tripService.getAllTrips(2L, 2L, startDate, null, 1)
+                .size()).isEqualTo(1);
+    }
+
+    @Test
+    void getAllTripsByLocationAndSportAndEndDate() {
+        LocalDate endDate = LocalDate.parse("2020-05-30");
+
+        assertThat(tripService.getAllTrips(1L, 2L, null, endDate, 1)
+                .size()).isEqualTo(1);
+    }
+    @Test
+    void getAllTripsByLocationAndSportAndEndDateNoResult() {
+        LocalDate endDate = LocalDate.parse("2018-05-30");
+
+        assertThat(tripService.getAllTrips(2L, 2L, null, endDate, 1)
+                .size()).isEqualTo(0);
+    }
+
+    @Test
+    void getAllTripsAllParam() {
+        LocalDate startDate = LocalDate.parse("2020-05-05");
+        LocalDate endDate = LocalDate.parse("2020-06-01");
+
+        assertThat(tripService.getAllTrips(1L, 2L, startDate, endDate, 1)
+                .size()).isEqualTo(1);
+    }
+    @Test
+    void getAllTripsAllParamNoResult() {
+        LocalDate startDate = LocalDate.parse("2020-05-05");
+        LocalDate endDate = LocalDate.parse("2020-05-15");
+
+        assertThat(tripService.getAllTrips(1L, 2L, startDate, endDate, 1)
+                .size()).isEqualTo(0);
+    }
+
+    @Test
     void getTripById() {
         TripDto tripDto = tripService.getTripById(2L);
 
