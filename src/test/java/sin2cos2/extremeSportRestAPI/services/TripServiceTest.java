@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.TripDto;
 import sin2cos2.extremeSportRestAPI.repositories.*;
+import sin2cos2.extremeSportRestAPI.specifications.SearchCriteria;
+import sin2cos2.extremeSportRestAPI.specifications.SearchOperation;
+import sin2cos2.extremeSportRestAPI.specifications.TripSpecification;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -181,6 +184,105 @@ class TripServiceTest extends ServiceTest {
         assertThat(tripRepository.findAllBySportId(2L, PageRequest.of(0, 10))
                 .getTotalElements())
                 .isEqualTo(0);
+        assertThat(count).isGreaterThan(tripRepository.count());
+    }
+
+    @Test
+    void deleteTripsByStartDate() {
+        long count = tripRepository.count();
+        LocalDate startDate = LocalDate.of(2020, 5, 6);
+
+        tripService.deleteAllTripsByParams(null, null, startDate, null);
+
+        assertThat(tripRepository.findAllByStartDate(startDate, PageRequest.of(0, 10))
+                .getTotalElements())
+                .isEqualTo(0);
+        assertThat(count).isGreaterThan(tripRepository.count());
+    }
+
+    @Test
+    void deleteTripsByEndDate() {
+        long count = tripRepository.count();
+        LocalDate endDate = LocalDate.parse("2020-05-06");
+
+        tripService.deleteAllTripsByParams(null, null, endDate, null);
+
+        assertThat(tripRepository.findAllByEndDate(endDate, PageRequest.of(0, 10))
+                .getTotalElements())
+                .isEqualTo(0);
+        assertThat(count).isGreaterThan(tripRepository.count());
+    }
+
+    @Test
+    void deleteTripsByLocationAndSportAndStartDate() {
+        LocalDate startDate = LocalDate.parse("2020-05-06");
+
+        TripSpecification tripSpecification = new TripSpecification();
+        tripSpecification.add(new SearchCriteria("location.id", 1L, SearchOperation.EQUAL));
+        tripSpecification.add(new SearchCriteria("sport.id", 2L, SearchOperation.EQUAL));
+        tripSpecification.add(new SearchCriteria("startDate", startDate, SearchOperation.GREATER_THAN_EQUAL));
+
+        long count = tripRepository.count();
+        long beforeDelete = tripRepository.findAll(tripSpecification).size();
+
+        tripService.deleteAllTripsByParams(1L, 2L, startDate, null);
+
+        assertThat(beforeDelete).isGreaterThan(tripRepository.findAll(tripSpecification).size());
+        assertThat(count).isGreaterThan(tripRepository.count());
+    }
+
+    @Test
+    void deleteTripsByLocationAndSportAndEndDate() {
+        LocalDate endDate = LocalDate.parse("2022-05-06");
+
+        TripSpecification tripSpecification = new TripSpecification();
+        tripSpecification.add(new SearchCriteria("location.id", 2L, SearchOperation.EQUAL));
+        tripSpecification.add(new SearchCriteria("sport.id", 2L, SearchOperation.EQUAL));
+        tripSpecification.add(new SearchCriteria("endDate", endDate, SearchOperation.LESS_THAN_EQUAL));
+
+        long count = tripRepository.count();
+        long beforeDelete = tripRepository.findAll(tripSpecification).size();
+
+        tripService.deleteAllTripsByParams(2L, 2L, null, endDate);
+
+        assertThat(beforeDelete).isGreaterThan(tripRepository.findAll(tripSpecification).size());
+        assertThat(count).isGreaterThan(tripRepository.count());
+    }
+
+    @Test
+    void noDeleteTripsByLocationAndStartDate() {
+        LocalDate startDate = LocalDate.parse("2022-05-06");
+
+        TripSpecification tripSpecification = new TripSpecification();
+        tripSpecification.add(new SearchCriteria("location.id", 1L, SearchOperation.EQUAL));
+        tripSpecification.add(new SearchCriteria("startDate", startDate, SearchOperation.GREATER_THAN_EQUAL));
+
+        long count = tripRepository.count();
+        long beforeDelete = tripRepository.findAll(tripSpecification).size();
+
+        tripService.deleteAllTripsByParams(1L, null, startDate, null);
+
+        assertThat(beforeDelete).isEqualTo(tripRepository.findAll(tripSpecification).size());
+        assertThat(count).isEqualTo(tripRepository.count());
+    }
+
+    @Test
+    void deleteTripsAllParams() {
+        LocalDate startDate = LocalDate.parse("2020-05-06");
+        LocalDate endDate = LocalDate.parse("2020-06-06");
+
+        TripSpecification tripSpecification = new TripSpecification();
+        tripSpecification.add(new SearchCriteria("location.id", 1L, SearchOperation.EQUAL));
+        tripSpecification.add(new SearchCriteria("sport.id", 2L, SearchOperation.EQUAL));
+        tripSpecification.add(new SearchCriteria("startDate", startDate, SearchOperation.GREATER_THAN_EQUAL));
+        tripSpecification.add(new SearchCriteria("endDate", endDate, SearchOperation.LESS_THAN_EQUAL));
+
+        long count = tripRepository.count();
+        long beforeDelete = tripRepository.findAll(tripSpecification).size();
+
+        tripService.deleteAllTripsByParams(1L, 2L, startDate, endDate);
+
+        assertThat(beforeDelete).isGreaterThan(tripRepository.findAll(tripSpecification).size());
         assertThat(count).isGreaterThan(tripRepository.count());
     }
 
