@@ -43,9 +43,9 @@ A more extensive description of each endpoint is available at /swagger-ui/index.
 - /api/v1/sports/{sportId}
 
 - /api/v1/trips
-    > startDate = yyyy-mm-dd           - To implement
+    > startDate = yyyy-mm-dd           
     >
-    > endDate = yyyy-mm-dd             - To implement
+    > endDate = yyyy-mm-dd            
     >
     > locationId = number
     >
@@ -73,9 +73,9 @@ A more extensive description of each endpoint is available at /swagger-ui/index.
 - /api/v1/sports/{sportId}   
 
 - /api/v1/trips
-    > startDate = yyyy-mm-dd           - To implement
+    > startDate = yyyy-mm-dd           
     >
-    > endDate = yyyy-mm-dd             - To implement
+    > endDate = yyyy-mm-dd             
     >
     > locationId = number
     >
