@@ -4,6 +4,7 @@ import org.springframework.data.jpa.domain.Specification;
 import sin2cos2.extremeSportRestAPI.entities.Trip;
 
 import javax.persistence.criteria.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,85 @@ public class TripSpecification implements Specification<Trip> {
         list = new ArrayList<>();
     }
 
-    private static Expression<String> getStringExpression(Root<Trip> root, SearchCriteria criteria) {
+    public void add(SearchCriteria criteria) {
+        list.add(criteria);
+    }
+
+    @Override
+    public Predicate toPredicate(Root<Trip> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        list.forEach(criteria -> predicates.add(createPredicate(criteria, root, builder)));
+
+        return builder.and(predicates.toArray(new Predicate[0]));
+    }
+
+    private Predicate createPredicate(SearchCriteria criteria, Root<Trip> root, CriteriaBuilder builder) {
+
+        if (criteria.getValue() instanceof LocalDate)
+            return datePredicate(criteria, root, builder);
+        else
+            return stringPredicate(criteria, root, builder);
+    }
+
+    private Predicate stringPredicate(SearchCriteria criteria, Root<Trip> root, CriteriaBuilder builder) {
+
+        Expression<String> key = getStringExpression(root, criteria);
+        String value = criteria.getValue().toString();
+
+        if (criteria.getOperation().equals(SearchOperation.EQUAL)) {
+            return builder.equal(key, value);
+        }
+        if (criteria.getOperation().equals(SearchOperation.NOT_EQUAL)) {
+            return builder.notEqual(key, value);
+        }
+        if (criteria.getOperation().equals(SearchOperation.LESS_THAN)) {
+            return builder.lessThan(key, value);
+        }
+        if (criteria.getOperation().equals(SearchOperation.LESS_THAN_EQUAL)) {
+            return builder.lessThanOrEqualTo(key, value);
+        }
+        if (criteria.getOperation().equals(SearchOperation.GREATER_THAN)) {
+            return builder.greaterThan(key, value);
+        }
+        if (criteria.getOperation().equals(SearchOperation.GREATER_THAN_EQUAL)) {
+            return builder.greaterThanOrEqualTo(key, value);
+        }
+
+        throw new RuntimeException(criteria.getOperation().toString() + " search operation is not implemented!");
+    }
+
+    private Predicate datePredicate(SearchCriteria criteria, Root<Trip> root, CriteriaBuilder builder) {
+
+        Path<LocalDate> key = root.get(criteria.getKey());
+        LocalDate value = (LocalDate) criteria.getValue();
+
+        if (criteria.getOperation().equals(SearchOperation.EQUAL)) {
+            return builder.equal(key, value);
+        }
+        if (criteria.getOperation().equals(SearchOperation.NOT_EQUAL)) {
+            return builder.notEqual(key, value);
+        }
+        if (criteria.getOperation().equals(SearchOperation.LESS_THAN)) {
+            return builder.lessThan(key, value);
+        }
+        if (criteria.getOperation().equals(SearchOperation.LESS_THAN_EQUAL)) {
+            return builder.lessThanOrEqualTo(key, value);
+        }
+        if (criteria.getOperation().equals(SearchOperation.GREATER_THAN)) {
+            return builder.greaterThan(key, value);
+        }
+        if (criteria.getOperation().equals(SearchOperation.GREATER_THAN_EQUAL)) {
+            return builder.greaterThanOrEqualTo(key, value);
+        }
+
+        throw new RuntimeException(criteria.getOperation().toString() + " search operation is not implemented!");
+
+    }
+
+    private Expression<String> getStringExpression(Root<Trip> root, SearchCriteria criteria) {
+
         String[] paths;
         Expression<String> key;
         Path<String> tempKey;
@@ -32,43 +111,5 @@ public class TripSpecification implements Specification<Trip> {
             key = root.get(criteria.getKey());
         }
         return key;
-    }
-
-    public void add(SearchCriteria criteria) {
-        list.add(criteria);
-    }
-
-    @Override
-    public Predicate toPredicate(Root<Trip> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-
-        List<Predicate> predicates = new ArrayList<>();
-        Expression<String> key;
-
-        for (SearchCriteria criteria : list) {
-
-            key = getStringExpression(root, criteria);
-
-            if (criteria.getOperation().equals(SearchOperation.GREATER_THAN)) {
-                predicates.add(builder.greaterThan(
-                        key, criteria.getValue().toString()));
-            } else if (criteria.getOperation().equals(SearchOperation.LESS_THAN)) {
-                predicates.add(builder.lessThan(
-                        key, criteria.getValue().toString()));
-            } else if (criteria.getOperation().equals(SearchOperation.GREATER_THAN_EQUAL)) {
-                predicates.add(builder.greaterThanOrEqualTo(
-                        key, criteria.getValue().toString()));
-            } else if (criteria.getOperation().equals(SearchOperation.LESS_THAN_EQUAL)) {
-                predicates.add(builder.lessThanOrEqualTo(
-                        key, criteria.getValue().toString()));
-            } else if (criteria.getOperation().equals(SearchOperation.NOT_EQUAL)) {
-                predicates.add(builder.notEqual(
-                        key, criteria.getValue()));
-            } else if (criteria.getOperation().equals(SearchOperation.EQUAL)) {
-                predicates.add(builder.equal(
-                        key, criteria.getValue()));
-            }
-        }
-
-        return builder.and(predicates.toArray(new Predicate[0]));
     }
 }
