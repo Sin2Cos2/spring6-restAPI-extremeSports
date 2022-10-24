@@ -1,6 +1,7 @@
 package sin2cos2.extremeSportRestAPI.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sin2cos2.extremeSportRestAPI.api.v1.dtos.TripDto;
@@ -31,22 +32,9 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public Set<TripDto> getAllTrips(Long locationId, Long sportId, LocalDate startDate, LocalDate endDate, Integer page) {
-        TripSpecification tripSpecification = new TripSpecification();
+        TripSpecification tripSpecification = getTripSpecification(locationId, sportId, startDate, endDate);
 
-        if (locationId != null) {
-            tripSpecification.add(new SearchCriteria("location.id", locationId, SearchOperation.EQUAL));
-        }
-        if (sportId != null) {
-            tripSpecification.add(new SearchCriteria("sport.id", sportId, SearchOperation.EQUAL));
-        }
-        if (startDate != null) {
-            tripSpecification.add(new SearchCriteria("startDate", startDate, SearchOperation.GREATER_THAN_EQUAL));
-        }
-        if (endDate != null) {
-            tripSpecification.add(new SearchCriteria("endDate", endDate, SearchOperation.LESS_THAN_EQUAL));
-        }
-
-        return tripRepository.findAll(tripSpecification)
+        return tripRepository.findAll(tripSpecification, PageRequest.of(page - 1, 10))
                 .stream()
                 .map(tripMapper::tripToTripDto)
                 .collect(Collectors.toSet());
@@ -131,6 +119,12 @@ public class TripServiceImpl implements TripService {
 
     private List<Trip> getAllTrips(Long locationId, Long sportId, LocalDate startDate, LocalDate endDate) {
 
+        TripSpecification tripSpecification = getTripSpecification(locationId, sportId, startDate, endDate);
+
+        return tripRepository.findAll(tripSpecification);
+    }
+
+    private TripSpecification getTripSpecification(Long locationId, Long sportId, LocalDate startDate, LocalDate endDate) {
         TripSpecification tripSpecification = new TripSpecification();
 
         if (locationId != null) {
@@ -145,7 +139,6 @@ public class TripServiceImpl implements TripService {
         if (endDate != null) {
             tripSpecification.add(new SearchCriteria("endDate", endDate, SearchOperation.LESS_THAN_EQUAL));
         }
-
-        return tripRepository.findAll(tripSpecification);
+        return tripSpecification;
     }
 }
