@@ -48,7 +48,7 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Set<LocationDto> getAllLocations(int page) {
         return locationRepository
-                .findAll()
+                .findAll(PageRequest.of(page - 1, 10))
                 .stream()
                 .map(locationMapper::locationToLocationDto)
                 .collect(Collectors.toSet());

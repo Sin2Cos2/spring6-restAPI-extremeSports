@@ -34,7 +34,7 @@ public class RegionServiceImpl implements RegionService {
     @Override
     public Set<RegionDto> getAllRegions(int page) {
         return regionRepository
-                .findAll()
+                .findAll(PageRequest.of(page - 1, 10))
                 .stream()
                 .map(regionMapper::regionToRegionDto)
                 .collect(Collectors.toSet());
