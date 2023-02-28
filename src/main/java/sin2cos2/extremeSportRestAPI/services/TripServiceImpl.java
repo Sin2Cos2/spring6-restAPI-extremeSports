@@ -16,7 +16,6 @@ import sin2cos2.extremeSportRestAPI.specifications.SearchOperation;
 import sin2cos2.extremeSportRestAPI.specifications.TripSpecification;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -111,17 +110,8 @@ public class TripServiceImpl implements TripService {
         if (locationId == null && sportId == null && startDate == null && endDate == null)
             return;
 
-        //Not the optimal way. Refactor with spring data jpa 3.0
-        List<Trip> trips = getAllTrips(locationId, sportId, startDate, endDate);
-
-        trips.forEach(trip -> tripRepository.deleteById(trip.getId()));
-    }
-
-    private List<Trip> getAllTrips(Long locationId, Long sportId, LocalDate startDate, LocalDate endDate) {
-
         TripSpecification tripSpecification = getTripSpecification(locationId, sportId, startDate, endDate);
-
-        return tripRepository.findAll(tripSpecification);
+        tripRepository.delete(tripSpecification);
     }
 
     private TripSpecification getTripSpecification(Long locationId, Long sportId, LocalDate startDate, LocalDate endDate) {

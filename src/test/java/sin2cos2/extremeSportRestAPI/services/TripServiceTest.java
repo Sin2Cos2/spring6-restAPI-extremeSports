@@ -284,6 +284,24 @@ class TripServiceTest extends ServiceTest {
     }
 
     @Test
+    void deleteTripsByLocationAndStartDate() {
+        LocalDate startDate = LocalDate.parse("2020-01-01");
+
+        TripSpecification tripSpecification = new TripSpecification();
+        tripSpecification.add(new SearchCriteria("location.id", 1L, SearchOperation.EQUAL));
+        tripSpecification.add(new SearchCriteria("startDate", startDate, SearchOperation.GREATER_THAN_EQUAL));
+
+        long count = tripRepository.count();
+        long beforeDelete = tripRepository.findAll(tripSpecification).size();
+
+        tripService.deleteAllTripsByParams(1L, null, startDate, null);
+
+        assertThat(beforeDelete).isNotEqualTo(0);
+        assertThat(tripRepository.findAll(tripSpecification).size()).isEqualTo(0);
+        assertThat(count - tripRepository.count()).isEqualTo(beforeDelete);
+    }
+
+    @Test
     void deleteTripsByLocationAndSportAndStartDate() {
         LocalDate startDate = LocalDate.parse("2020-05-06");
 
