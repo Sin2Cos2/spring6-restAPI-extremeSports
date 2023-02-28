@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = CountryController.class)
 class CountryControllerTest {
 
-    private final String BASE_URL = "/api/v1/countries/";
+    private final String BASE_URL = "/api/v1/countries";
     @MockBean
     private CountryService countryService;
 
@@ -80,7 +80,7 @@ class CountryControllerTest {
 
         when(countryService.getCountryDtoById(any())).thenReturn(countryDto);
 
-        mockMvc.perform(get(BASE_URL + "3")
+        mockMvc.perform(get(BASE_URL + "/3")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", equalTo("test")));
@@ -107,7 +107,7 @@ class CountryControllerTest {
 
         when(countryService.updateCountry(anyLong(), any())).thenReturn(countryDto);
 
-        mockMvc.perform(put(BASE_URL + "3")
+        mockMvc.perform(put(BASE_URL + "/3")
                         .content(ow.writeValueAsString(test))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -117,7 +117,7 @@ class CountryControllerTest {
     @Test
     void deleteCountry() throws Exception {
 
-        mockMvc.perform(delete(BASE_URL + "3"))
+        mockMvc.perform(delete(BASE_URL + "/3"))
                 .andExpect(status().isOk());
     }
 }

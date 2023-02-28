@@ -3,8 +3,8 @@ package sin2cos2.extremeSportRestAPI.entities;
 import lombok.*;
 import org.hibernate.Hibernate;
 
-import javax.persistence.*;
-import javax.validation.constraints.Size;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;

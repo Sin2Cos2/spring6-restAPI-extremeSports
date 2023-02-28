@@ -3,7 +3,7 @@ package sin2cos2.extremeSportRestAPI.specifications;
 import org.springframework.data.jpa.domain.Specification;
 import sin2cos2.extremeSportRestAPI.entities.Trip;
 
-import javax.persistence.criteria.*;
+import jakarta.persistence.criteria.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
